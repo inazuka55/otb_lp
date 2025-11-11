@@ -1,0 +1,19 @@
+{
+  "name": "outofthebox_lp",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "nuxt": "^3.15.4",
+    "sass": "^1.85.0",
+    "sass-loader": "^16.0.5",
+    "typescript": "^5.7.3"
+  }
+}

@@ -1,0 +1,220 @@
+@use 'mixin';
+@use 'reset';
+@use 'utility';
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Rock+Salt&display=swap');
+
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+::-moz-selection {
+  background-color: mixin.$main;
+  color: #fff;
+}
+
+::selection {
+  background-color: mixin.$main;
+  color: #fff;
+}
+
+body {
+  color: #222;
+  font-family: 'hiragino-kaku-gothic-pron', sans-serif;
+  font-weight: 300;
+  font-style: normal;
+  margin: auto;
+}
+
+.en {
+  font-family: "adobe-handwriting-ernie", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.ja {
+  font-family: 'Hiragino Mincho ProN', sans-serif;
+}
+
+.pined {
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+h1 {
+  font-weight: bold;
+}
+
+h2 {
+  font-weight: bold;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+  width: 100%;
+}
+
+p {
+  font-size: 0.875em;
+  line-height: 2;
+  font-feature-settings: 'palt';
+  letter-spacing: 0.04em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  display: inline-block;
+
+  &:hover {
+    @include mixin.transition;
+  }
+}
+
+.page-contents {
+  width: 100%;
+  max-width: 1600px;
+  margin: auto;
+
+  @include mixin.max-screen(mixin.$medium) {
+    margin: 0;
+  }
+}
+
+.box {
+  padding: 40px 70px;
+  background-color: #D09B56;
+  border-radius: 15px 0 0 15px;
+  box-shadow: 0px 3px 6px #00000029;
+  margin-bottom: 30px;
+
+  @include mixin.max-screen(mixin.$small) {
+    border-radius: 0;
+    padding: 30px 20px;
+  }
+
+  @include mixin.screen(mixin.$small,1060px) {
+    border-radius: 0;
+    padding: 40px 35px;
+  }
+
+  @include mixin.min-screen(1600px) {
+    border-radius: 15px;
+  }
+}
+
+.button-wrap {
+  text-align: center;
+
+  a {
+    font-family: 'Hiragino', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    background-color: #D09B56;
+    color: #fff;
+    border-radius: 15px;
+    max-width: 200px;
+    width: 100%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    position: relative;
+
+    p {
+      font-size: 1em;
+
+      @include mixin.max-screen(mixin.$medium) {
+        font-size: 0.875em;
+      }
+    }
+
+    .arrow {
+      position: relative;
+      display: inline-block;
+      width: 16px;
+      height: 2px;
+      margin-top: 7px;
+      margin-left: 15px;
+      border-radius: 9999px;
+      background-color: #ffffff;
+      vertical-align: text-top;
+    }
+    
+    .arrow::before {
+      content: "";
+      position: absolute;
+      top: calc(50% - 1px);
+      right: 0;
+      width: 8px;
+      height: 2px;
+      border-radius: 9999px;
+      background-color: #ffffff;
+      transform: rotate(45deg);
+      transform-origin: calc(100% - 0.5px) 50%;
+    }
+  }
+}
+
+.note {
+  font-size: 0.625em;
+  display: block;
+  text-indent: -15px;
+  padding-left: 15px;
+
+  &:before {
+    content: '※';
+    margin-right: 3px;
+  }
+}
+
+.section {
+  padding: 60px 0;
+
+  .section-inner {
+    width: 90%;
+    margin: auto;
+
+    .heading {
+      text-align: center;
+    }
+
+    .sub-heading {
+      text-align: center;
+    }
+  }
+}
+
+.heading {
+  font-family: "adobe-handwriting-ernie", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  color: #D09B56;
+  font-size: 1.5em;
+  margin-bottom: 10px;
+
+  @include mixin.max-screen(mixin.$medium) {
+    font-size: 1.375em;
+    margin-bottom: 10px;
+  }
+}
+
+.sub-heading {
+  font-family: 'Hiragino Mincho ProN', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 1.25em;
+  line-height: 1.5;
+  margin-bottom: 30px;
+
+  @include mixin.max-screen(mixin.$medium) {
+    font-size: 1.125em;
+    margin-bottom: 10px;
+  }
+}
