@@ -2,8 +2,6 @@
 @use 'reset';
 @use 'utility';
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Rock+Salt&display=swap');
-
 *,
 *:before,
 *:after {
@@ -23,21 +21,27 @@
 
 body {
   color: #222;
-  font-family: 'hiragino-kaku-gothic-pron', sans-serif;
-  font-weight: 300;
+  font-family: "noto-sans-cjk-jp", sans-serif;
+  font-weight: 400;
   font-style: normal;
   margin: auto;
 }
 
-.en {
-  font-family: "adobe-handwriting-ernie", sans-serif;
+.logo-type {
+  font-family: makinas-4-flat, sans-serif;
   font-weight: 400;
   font-style: normal;
 }
 
-.ja {
-  font-family: 'Hiragino Mincho ProN', sans-serif;
-}
+// .en {
+//   font-family: "adobe-handwriting-ernie", sans-serif;
+//   font-weight: 400;
+//   font-style: normal;
+// }
+
+// .ja {
+//   font-family: 'Hiragino Mincho ProN', sans-serif;
+// }
 
 .pined {
   overflow: hidden;
@@ -60,10 +64,9 @@ img {
 }
 
 p {
-  font-size: 0.875em;
-  line-height: 2;
-  font-feature-settings: 'palt';
-  letter-spacing: 0.04em;
+  font-size: 14px;
+  line-height: 1.8;
+  letter-spacing: 0.42px;
 }
 
 a {

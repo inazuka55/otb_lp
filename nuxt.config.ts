@@ -14,6 +14,11 @@ export default defineNuxtConfig({
     sharedPrerenderData: true,
     viewTransition: true,
   },
+
+  runtimeConfig: {
+    public: {
+    }
+  },
   
   compatibilityDate: '2025-11-11',
 });

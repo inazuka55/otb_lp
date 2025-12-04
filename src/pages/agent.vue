@@ -1,414 +1,526 @@
 <template>
-  <p>エージェントページ</p>
-
-  <div class="window-wrap" style="display: none;">
-    <div class="background" />
-    <div class="window hero">
-      <div class="hero-inner">
-        <h1 class="ja">東京予防医療クリニック</h1>
-        <div class="hero-inner_desc">
-          <p class="text">
-            <span>病気を治す医療から病気にさせない予防医療へ。</span>
-            <span>患者様一人ひとりの個性に合わせた個別化医療を提供します。</span>
-          </p>
-        </div>
-        <div class="button-wrap">
-          <a href="https://www.tokyo-yobo.com/?utm_medium=katarakulp&utm_content=hero" target="_blank">
-            <p>ご予約はこちら<span class="arrow"></span></p>
-          </a>
-        </div>
-      </div>
+  <div id="hero">
+    <div class="copy-wrap">
+      <h1>
+        <span>求職者が求めていた</span>
+        <span>新たなアプローチ</span>
+        <span class="logo-type">「イチヅケ」</span>
+      </h1>
+      <NuxtLink to="/agent/entry" class="btn">転職エージェント無料登録</NuxtLink>
+      <h2>掲載料金・初期費用<span>0</span>円</h2>
     </div>
-
-    <div class="window contents">
-      <div class="main-hero_contents">
-        <div class="main-hero" :style="{ height: windowHeight }">
-          <div class="main-hero-inner">
-            <h2>
-              <span class="ja">「新しく自由な体に」</span>
-            </h2>
-          </div>
-        </div>
-        <div class="main-hero-copy">
-          <h4 class="ja">肩こりの悩みに注射による、新しい治療法</h4>
-          <h1 class="ja">「カタラク」</h1>
-        </div>
-      </div>
-
-      <div class="topic box">
-        <div class="topic-inner">
-          <h3 class="sub-heading">
-            <span><span class="ja">TV</span>でも紹介された、<span class="ja">筋膜リリース注射</span>で</span>
-            <span>肩こりケア。痛み解消・自由な体へ！</span>
-          </h3>
-          <p>
-            <span>近年TVで放送され、注目を集めている「筋膜リリース注射」。</span>
-            <span>骨や筋肉・内臓・神経・血管などを包み、全身をボディスーツのように覆っているネット状の繊維の膜「筋膜」。</span>
-            <span>体の隅々まで、立体的に支えるために必要で、第二の骨格とも言われ、重要な働きをしています。</span>
-            <span>「筋膜リリース」とは、“筋膜はがし”とも呼ばれ、筋膜が硬くなったり、癒着している筋膜をはがして痛みを改善する方法になります。</span>
-          </p>
-          <p>お悩みの肩こりに筋膜リリース注射という選択をお勧めいたします！</p>
-        </div>
-      </div>
-
-      <div class="trouble box">
-        <div class="trouble-inner">
-          <h2 class="heading">Trouble</h2>
-          <h3 class="sub-heading">こんなお悩み、ありませんか？</h3>
-          <div class="trouble-list">
-            <p>年齢と共に肩が重くなってきた</p>
-            <p>長時間のデスクワークで、肩に重い痛みがある</p>
-            <p>どれだけマッサージしても肩こりがラクにならない</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="confidence box">
-        <div class="confidence-inner ja">
-          <span>そんなお悩みを解決するのが、筋膜リリース注射を</span>
-          <span>用いた東京予防医療クリニックの「カタラク」です</span>
-        </div>
-      </div>
-
-      <div class="treatment box">
-        <div class="treatment-inner">
-          <h2 class="heading">Treatment</h2>
-          <h3 class="sub-heading">筋膜リリース水素注射「<span>カタラク</span>」</h3>
-          <div class="treatment-point">
-            <div class="point">
-              <h4>
-                <span class="point-label">What</span>
-                <span class="point-title">筋膜リリース水素注射って？</span>
-              </h4>
-              <p>緊張や拘縮によって癒着・肥厚した筋膜の周囲に<span>水素入り生理食塩水</span>を注入し、癒着した筋膜を剥がしていく治療になります。</p>
-            </div>
-            <div class="point">
-              <h4>
-                <span class="point-label">Mechanism</span>
-                <span class="point-title">メカニズム</span>
-              </h4>
-              <p>筋膜の癒着を剥離することで、結合組織の可動性が増し、伸張性が改善</p>
-              <p>注入した水素入り生理食塩水によって、蓄積した炎症物質が洗い流される</p>
-            </div>
-            <div class="point">
-              <h4>
-                <span class="point-label">Quick</span>
-                <span class="point-title">素早い治療</span>
-              </h4>
-              <p>１箇所あたりの注射時間は<span>30〜60秒前後</span>とコンパクト！</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="what" class="what box">
-        <div class="inner">
-          <h2 class="heading">What is</h2>
-          <h3 class="sub-heading">肩こりの原因って？</h3>
-          <img src="/images/img-what.jpg" alt="肩こりの原因って？" class="what-img" loading="lazy" />
-          <p>
-            <span>肩こりや腰痛は、筋肉の緊張や血流の悪化、姿勢の不良など、様々な要因で引き起こされます。首や背中が緊張するような姿勢での作業、姿勢の良くない人（猫背・前かがみ）、運動不足、精神的なストレス、なで肩、連続して長時間同じ姿勢をとること、ショルダーバッグ、冷房などが原因になります。</span>
-            <span>当クリニックでは、患者様一人ひとりの状態に合わせた治療を提案させていただき、皆様の日常生活の質の向上を目指します。</span>
-          </p>
-        </div>
-      </div>
-
-      <div class="effect box">
-        <h2 class="heading">Effect</h2>
-        <h3 class="sub-heading">カタラクの効果で肩こり改善！</h3>
-      </div>
-
-      <div class="effect">
-        <div class="section-inner effect-inner">
-          <div class="effect-wrap">
-            <div class="effect-content">
-              <div class="image">
-                <img src="/images/icon-effect1.svg" alt="筋肉緊張の緩和" loading="lazy" />
-              </div>
-              <div class="e-cap">
-                <h4>筋肉緊張の緩和</h4>
-                <p>
-                  <span>筋肉のこわばりを和らげます。</span>
-                  <span>仕事や日常生活の合間に簡単なストレッチを取り入れることで、筋肉の柔軟性を維持することができます。</span>
-                </p>
-              </div>
-            </div>
-            <div class="effect-content">
-              <div class="image">
-                <img src="/images/icon-effect2.svg" alt="疼痛緩和" loading="lazy" />
-              </div>
-              <div class="e-cap">
-                <h4>疼痛緩和</h4>
-                <p>肩こりにより引き起こされた疼痛をカタラクによって緩和させます。</p>
-              </div>
-            </div>
-            <div class="effect-content">
-              <div class="image">
-                <img src="/images/icon-effect3.svg" alt="運動機能の向上" loading="lazy" />
-              </div>
-              <div class="e-cap">
-                <h4>運動機能の向上</h4>
-                <p>肩こりが改善されることにより、周辺筋肉の運動機能の向上が見込めます。</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="features box">
-        <div class="features-inner">
-          <h2 class="heading">Features</h2>
-          <h3 class="sub-heading">筋膜リリース注射の持つ３つの特徴</h3>
-          <div class="features-point">
-            <div class="point">
-              <h4>
-                <span class="point-label">Point</span>
-                <span class="point-title">即効性</span>
-              </h4>
-              <div class="point-wrap">
-                <div class="icon">
-                  <img src="~/assets/icons/icon-point_01.svg" alt="即効性" loading="lazy" />
-                </div>
-                <p>早い方ですと、注射後10〜20分程度で、注入部位の重怠さがスッと抜けた感じをご体感頂けます。</p>
-              </div>
-            </div>
-            <div class="point">
-              <h4>
-                <span class="point-label">Point</span>
-                <span class="point-title">安全性</span>
-              </h4>
-              <div class="point-wrap">
-                <div class="icon">
-                  <img src="~/assets/icons/icon-point_02.svg" alt="安全性" loading="lazy" />
-                </div>
-                <p>治療に用いるのは生理食塩水ですので、一般的にお身体への健康被害は殆どありません。アレルギーの心配もほとんどないため、安全に治療を受けて頂くことができます。</p>
-              </div>
-            </div>
-            <div class="point">
-              <h4>
-                <span class="point-label">Point</span>
-                <span class="point-title">確実性</span>
-              </h4>
-              <div class="point-wrap">
-                <div class="icon">
-                  <img src="~/assets/icons/icon-point_03.svg" alt="確実性" loading="lazy" />
-                </div>
-                <p>
-                  <span>筋膜リリース注射では超音波装置を見ながら治療を行います。</span>
-                  <span>その為、確実に筋膜が剥がれていくのです。</span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="care box">
-        <div class="inner">
-          <h2 class="heading">Care</h2>
-          <h3 class="sub-heading">良い姿勢を習慣づけることも大切です</h3>
-          <p>
-            <span>下記にて紹介しております、どちらの治療も肩こりに有効な治療ではありますが、治療後原因の一つに挙げられる「悪い姿勢」のままでいると、肩こりが再発します。</span>
-            <span>その為、普段から「良い姿勢」を心がけ肩こりの予防をすることが大切です。</span>
-          </p>
-        </div>
-      </div>
-
-      <div class="difference box">
-        <div class="inner">
-          <h2 class="heading">Difference</h2>
-          <h3 class="sub-heading">従来の治療法と筋膜リリース水素注射の違いについて</h3>
-          <div class="difference-wrap">
-            <div class="point">
-              <h4>
-                <span class="point-label">Common</span>
-                <span class="point-title">一般的な治療法</span>
-              </h4>
-              <div class="difference-desc">
-                <div class="image">
-                  <picture>
-                    <source srcset="/images/img-difference_01.jpg" media="(min-width:481px)" >
-                    <source srcset="/images/img-difference_01-mobile.jpg" media="(max-width:480px)" >
-                    <img src="/images/img-difference_01.jpg" alt="一般的な治療法"  width="100%" height="100%" loading="lazy">
-                  </picture>
-                </div>
-                <p>
-                  <span>マッサージやストレッチ、温熱療法、電気治療、鍼治療などの治療が一般かと思われます。</span>
-                  <span>一時的にコリはほぐれますが、根本的な痛みは改善しづらいです。その為、炎症の治りが遅く痛みを繰り返しやすい点が挙げられます。</span>
-                </p>
-              </div>
-            </div>
-            <p class="arrow-text ja"><span class="arrow"></span><span>当院が提供する治療法はこちら</span></p>
-            <div class="point">
-              <h4>
-                <span class="point-label">Injection</span>
-                <span class="point-title">筋膜リリース水素注射</span>
-              </h4>
-              <div class="difference-desc">
-                <div class="image">
-                  <picture>
-                    <source srcset="/images/img-difference_02.jpg" media="(min-width:481px)" >
-                    <source srcset="/images/img-difference_02-mobile.jpg" media="(max-width:480px)" >
-                    <img src="/images/img-difference_02.jpg" alt="筋膜リリース水素注射"  width="100%" height="100%" loading="lazy">
-                  </picture>
-                </div>
-                <p>
-                  <span>当院はナノバブルの水素を加え注入しています。</span>
-                  <span>水素の強力な抗酸化作用で炎症が抑えられ鎮痛効果が得られると同時に、血流改善と傷害組織の修復が期待されます。</span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="review" class="review box">
-        <div class="inner">
-          <h2 class="heading">Review</h2>
-          <h3 class="sub-heading">施術を受けたお客様の声</h3>
-          <p>実際に当院に寄せられた、患者様のお声を紹介していきます。</p>
-        </div>
-      </div>
-
-      <div class="review">
-        <div class="section-inner review-inner">
-          <div class="review-wrap">
-            <div class="review-content">
-              <div class="icon">
-                <img src="/images/img-review_01.png" alt="レビュー1" class="review-img" loading="lazy" />
-              </div>
-              <div class="review-wrap_cap">
-                <h4>諦めていた肩こりがすぐに改善しました！</h4>
-                <p>
-                  <span>パソコン作業による酷い肩こりで鍼灸やストレッチマッサージに通いましたが、改善せず諦めていました。</span>
-                  <span>ネットで筋膜リリースを知り、早速受けてみました。すぐに改善したのにビックリ。注射による痛みもなく先生も、とても親切丁寧に対応してくれました。おかげさまで、非常に楽になりました。</span>
-                </p>
-                <h4>50代 女性 Nさん</h4>
-              </div>
-            </div>
-            <div class="review-content">
-              <div class="icon">
-                <img src="/images/img-review_02.png" alt="レビュー2" class="review-img" loading="lazy" />
-              </div>
-              <div class="review-wrap_cap">
-                <h4>エコーを見ながら実感度の高い施術でした！</h4>
-                <p>
-                  <span>水素が注入され、筋膜が剥がれているところをエコーで実際に見れるのは実感度が高かったです。</span>
-                  <span>今まで、マッサージには何度も通ってましたが、その日だけ楽になる程度だったので、筋膜リリース注射を打つ前と打った後でこんなに違うのかと感動しました。</span>
-                  <span>凝っていたところの触った感じも全然違って、柔らかくなっていたので、今後も通おうと思っています。</span>
-                </p>
-                <h4>30代 男性 Yさん</h4>
-              </div>
-            </div>
-            <div class="review-content">
-              <div class="icon">
-                <img src="/images/img-review_03.png" alt="レビュー3" class="review-img" loading="lazy" />
-              </div>
-              <div class="review-wrap_cap">
-                <h4>施術直後の即効性に感動しました！</h4>
-                <p>
-                  <span>日頃から肩こりが気になり、様々受けてみましたが、効果がイマイチ感じられず今回受診しました。</span>
-                  <span>肩や首の後ろ何ヶ所が注射をし、施術直後から、少しずつ肩こりの症状が改善されてスッキリしてきました！</span>
-                  <span>施術直後からの即効性に正直びっくりしたので、即効性を求める方はぴったりだと思います。</span>
-                  <span>筋肉が徐々にほぐれているのを実感できたので、今後も続けてみようと思います。</span>
-                </p>
-                <h4>40代 女性 Kさん</h4>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="campaign" class="campaign box">
-        <div class="inner">
-          <h2 class="heading">Campaign</h2>
-          <h3 class="sub-heading">限定キャンペーン</h3>
-          <div class="campaign-wrap">
-            <div class="text-wrap campaign-img">
-              <div class="text-inner">
-                <div class="normal-price">
-                  <p>通常価格(税込)</p>
-                  <h5 class="ja">4,400<span>円</span></h5>
-                </div>
-                <span class="arrow"></span>
-                <div class="campaign-price">
-                  <p class="en">Campaign</p>
-                  <h5 class="ja">3,740<span>円</span></h5>
-                  <p class="note">初回施術限定価格になります</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="fee" class="fee box">
-        <div class="inner">
-          <h2 class="heading">Fee</h2>
-          <h3 class="sub-heading">料金表</h3>
-          <div class="fee-wrap">
-            <div class="price-inner">
-              <div class="price-wrap">
-                <p>1本(10ml)毎</p>
-                <p><span class="price">4,400</span></p>
-              </div>
-              <div class="price-wrap">
-                <p>1本(10ml)<span>4本目から</span></p>
-                <p><span class="price">3,850</span></p>
-              </div>
-            </div>
-          </div>
-          <p class="note">慢性的な肩こりの場合、最初は1～2週間に1回の治療がお勧めです。</p>
-          <p class="note">凝りや疲労感が強い場合は、注射や点滴の併用が有効です。</p>
-        </div>
-      </div>
-
-      <div class="reservation box">
-        <div class="inner">
-          <div class="reservation-image">
-            <img src="/images/img-end.svg" alt="キャンペーン" class="reservation-img" loading="lazy" />
-          </div>
-          <div class="reservation-cap">
-            <h4 class="ja">
-              <span>東京予防医療クリニックで</span>
-              <span>肩こりのない身体へ。</span>
-            </h4>
-            <div class="button-wrap">
-              <a href="https://www.tokyo-yobo.com/?utm_medium=katarakulp&utm_content=footer" target="_blank">
-                <p>ご予約はこちら<span class="arrow"></span></p>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="footer box">
-        <div class="logo">
-          <img src="/images/img-logo.jpg" alt="" />
-        </div>
-        <div class="menu-list">
-          <NuxtLink :to="{ path: '/', hash: '#what' }" class="scrollto flexbox" @click="removeBodyClass">
-              <span class="menu-title-wrap">What is</span>
-          </NuxtLink>
-          <NuxtLink :to="{ path: '/', hash: '#review' }" class="scrollto flexbox" @click="removeBodyClass">
-              <span class="menu-title-wrap">Review</span>
-          </NuxtLink>
-          <NuxtLink :to="{ path: '/', hash: '#campaign' }" class="scrollto flexbox" @click="removeBodyClass">
-              <span class="menu-title-wrap">Campaign</span>
-          </NuxtLink>
-          <NuxtLink :to="{ path: '/', hash: '#fee' }" class="scrollto flexbox" @click="removeBodyClass">
-              <span class="menu-title-wrap">Fee</span>
-          </NuxtLink>
-        </div>
-        <div class="navigation-button">
-          <a href="https://page.line.me/301uojfv?oat_content=url&openQrModal=true" target="_blank">
-              <img src="~/assets/icons/icon-line.svg" alt="東京予防医療クリニック公式LINEアカウント" />
-          </a>
-          <a href="https://www.instagram.com/tokyo_yobo_clinic/" target="_blank">
-              <img src="~/assets/icons/icon-instagram.svg" alt="東京予防医療クリニック公式Instagramアカウント" />
-          </a>
-        </div>
-      </div>
-    </div>
+    <div class="wave"></div>
   </div>
+
+  <section id="about">
+    <div class="section-wrap">
+      <div class="text-wrap">
+        <h5><span class="logo-type">イチヅケ</span>は、</h5>
+        <h5>求職者の“市場価値”を可視化し、新たなアプローチで求職者とのマッチングを実現するキャリアプラットフォームです。</h5>
+        <p>求職者がプロフィールを登録すると、企業・エージェントは年収提示ベースのオファーを提示でき、求職者はその提示額と熱意をもとに、最も関心の高いエージェントとのみコンタクトを開始します。</p>
+      </div>
+      <img src="/images/mock.svg" alt="モック">
+    </div>
+  </section>
+
+  <section id="point">
+    <div class="section-wrap" style="background-image: url(/images/img-point_1.jpg);">
+      <div class="text-wrap">
+        <h5>本気度の高い求職者へ最短でリーチできる。</h5>
+        <p>イチヅケには、自分の市場価値を正しく知りたい意欲の高い求職者が集まります。プロフィールを公開した段階で、転職意向が強い、熱量の高い求職者が多数存在します。従来のスカウト型よりレスポンス率が高く、アプローチの効率が大幅に改善できます。</p>
+      </div>
+    </div>
+    <div class="section-wrap second" style="background-image: url(/images/img-point_2.jpg);">
+      <div class="text-wrap">
+        <h5>競合エージェントとの差別化が図れる。</h5>
+        <p>求職者側は “提示額(年収)＋熱量” を基準に比較します。高評価を提示できるほど求職者との接点を確保しやすく、良い提案をできる転職エージェント様が、正当に選ばれる環境が整っています。</p>
+      </div>
+    </div><div class="section-wrap" style="background-image: url(/images/img-point_3.jpg);">
+      <div class="text-wrap">
+        <h5>データに基づいた採用活動ができる。</h5>
+        <p>様々な職種・スキル・経験値の人材が、どのような反応を得ているのか。市場価値のトレンドを知るヒントになります。求人戦略・求職者への提案精度・顧客へのレポートに活用でき、データドリブンな転職支援が可能になります。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="appeal">
+    <div class="section-wrap">
+      <h5>年収提示型求職マッチングプラットフォーム<span>「イチヅケ」の魅力</span></h5>
+      <div class="appeal-wrap">
+        <div 
+          class="appeal-item" 
+          v-for="(item, index) in appealItems" 
+          :key="index"
+        >
+          <img :src="item.img" :alt="item.title" />
+          <h5>{{ item.title }}</h5>
+          <p>{{ item.text }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="blog">
+    <div class="section-wrap">
+      <h5>イチヅケブログ</h5>
+      <div class="blog-wrap">
+        <div 
+          class="blog-item" 
+          v-for="(item, index) in blogList" 
+          :key="index"
+        >
+          <img :src="item.img" :alt="item.title" />
+          <div class="info-wrap">
+            <span class="date">{{ item.date }}</span>
+            <span class="category">{{ item.category }}</span>
+          </div>
+          <p>{{ item.title }}</p>
+        </div>
+      </div>
+      <NuxtLink to="/blog" class="btn">ブログ一覧へ</NuxtLink>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="section-wrap">
+      <h5>FAQ</h5>
+
+      <div class="faq-wrap">
+        <div 
+          class="faq-item"
+          v-for="(item, index) in faqList"
+          :key="index"
+        >
+          <!-- 質問をクリックで開閉 -->
+          <p 
+            class="faq-question js-toggle"
+            :class="{ active: openIndex === index }"
+            @click="toggle(index)"
+          >
+            Q. {{ item.question }}
+          </p>
+
+          <!-- 回答 -->
+          <p 
+            class="faq-answer"
+            :class="{ open: openIndex === index }"
+          >
+            A. {{ item.answer }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
 </template>
+
+<script setup lang="ts">
+const appealItems = [
+  {
+    img: "/images/img-appeal_1.jpg",
+    title: "求職者へのアプローチ無制限",
+    text: "求職者へは、回数・上限なく提案が可能。オファー枠やメッセージ上限に縛られず、候補者への接触スピードと量の両面を高め、機会損失を防ぎながらアクティブな獲得が行えます。"
+  },
+  {
+    img: "/images/img-appeal_2.jpg",
+    title: "採用コストの効率化",
+    text: "求職者のスキル・経験・実績などの情報を確認したうえで、提示したい年収を示すことで、求職者の最終的に大きな判断材料の「年収」から判断しやすくなり、ミスマッチを最小化します。"
+  },
+  {
+    img: "/images/img-appeal_3.jpg",
+    title: "求職者と直接コンタクト",
+    text: "条件を満たすと求職者とダイレクトにやり取りが可能になります。仲介を挟まないためレスポンスが早く、提案の温度感がそのまま届き、意思決定の速度と成約率が向上します。"
+  }
+];
+
+const blogList = [
+  {
+    img: "/images/img-blog_1.png",
+    date: "2025.11.11",
+    category: "お知らせ",
+    title: "提供サービス変更及び利用規約改定のお知らせ",
+  },
+  {
+    img: "/images/img-blog_2.png",
+    date: "2025.11.11",
+    category: "お知らせ",
+    title: "提供サービス変更及び利用規約改定のお知らせ",
+  },
+  {
+    img: "/images/img-blog_3.png",
+    date: "2025.11.11",
+    category: "お知らせ",
+    title: "提供サービス変更及び利用規約改定のお知らせ",
+  },
+  {
+    img: "/images/img-blog_4.png",
+    date: "2025.11.11",
+    category: "お知らせ",
+    title: "提供サービス変更及び利用規約改定のお知らせ",
+  },
+];
+
+const faqList = [
+  {
+    question: "サービスの利用に料金はかかりますか？",
+    answer: "基本プランは無料でご利用いただけます。有料オプションをご希望の場合のみ追加費用が発生します。",
+  },
+  {
+    question: "パスワードを忘れた場合はどうすればいいですか？",
+    answer: "ログイン画面の「パスワードをお忘れの方」より再設定手続きを行ってください。",
+  },
+  {
+    question: "登録後にメールアドレスの変更は可能ですか？",
+    answer: "マイページ内のアカウント設定からメールアドレスの変更が可能です。",
+  },
+  {
+    question: "問い合わせの返信にはどれくらい時間がかかりますか？",
+    answer: "通常1〜2営業日以内にご返信しております。混雑時はお時間をいただく場合があります。",
+  },
+];
+
+const openIndex = ref<number | null>(null);
+
+const toggle = (index: number) => {
+  openIndex.value = openIndex.value === index ? null : index;
+};
+
+</script>
+
+
+<style lang="scss" scoped>
+@use '~/assets/css/mixin.scss';
+
+#hero {
+  width: 100%;
+  height: 100vh;
+  background-image: url(/images/img-hero.jpg);
+  background-position: center;
+  background-size: cover;
+  align-content: center;
+  position: relative;
+
+  .copy-wrap {
+    padding-left: 11.72%;
+    position: absolute;
+    bottom: 21.875%;
+
+    h1 {
+      font-size: 35px;
+      color: white;
+      font-weight: 500;
+      letter-spacing: 1.05px;
+      line-height: 1.67;
+      text-shadow: 0px 3px 6px #0000005C;
+
+      span {
+        display: block;
+
+        &.logo-type {
+          font-size: 50px;
+          text-indent: -30px;
+          letter-spacing: 3px;
+        }
+      }
+    }
+
+    .btn {
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: 0.54px;
+      background-color: mixin.$main;
+      border-radius: 30px;
+
+      padding: 10px 40px 13px;
+      margin-top: 20px;
+    }
+
+    h2 {
+      font-size: 30px;
+      color: white;
+      font-weight: 500;
+      letter-spacing: 0.9px;
+      line-height: 1;
+      text-shadow: 0px 3px 6px #0000005C;
+
+      margin-top: 30px;
+
+      span {
+        font-size: 80px;
+        color: mixin.$main;
+        letter-spacing: 2.4px;
+        text-shadow: none;
+
+        min-width: 60px;
+        display: inline-block;
+        text-align: end;
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .wave {
+    width: 100vw;
+    height: 53px;
+    background-image: url(/images/wave.svg);
+    background-position: center;
+    background-size: cover;
+
+    position: absolute;
+    bottom: -1px;
+  }
+}
+
+#about {
+  .section-wrap {
+    max-width: 1020px;
+    width: 90%;
+    display: flex;
+    gap: 0 110px;
+    padding: 80px 0 100px;
+    margin: auto;
+
+    align-items: center;
+
+    .text-wrap {
+      max-width: 440px;
+      width: 100%;
+
+      h5 {
+        font-size: 18px;
+        letter-spacing: 0.54px;
+        line-height: 1.7;
+      }
+
+      .logo-type {
+        font-size: 30px;
+        letter-spacing: 0.9px;
+        margin-right: 5px;
+      }
+
+      p {
+        font-size: 15px;
+        letter-spacing: 0.45px;
+        line-height: 1.73;
+        margin-top: 40px;
+      }
+    }
+
+    img {
+      width: 470px;
+      height: 440px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+  }
+}
+
+#point {
+  .section-wrap {
+    position: relative;
+    
+    width: 100vw;
+    max-height: 602px;
+    height: 100%;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    padding: 214px 150px 214px 0;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.15);
+    }
+
+    &.second {
+      padding: 214px 0 214px 150px;
+
+      .text-wrap {
+        margin-right: auto;
+        margin-left: unset;
+      }
+    }
+
+    .text-wrap {
+      max-width: 391px;
+      width: 100%;
+      color: white;
+      position: relative;
+      z-index: 1;
+      margin-left: auto;
+
+      h5 {
+        font-size: 18px;
+        text-shadow: 0px 3px 7px #00000064;
+      }
+
+      p {
+        text-shadow: 0px 3px 7px #00000040;
+        margin-top: 25px;
+      }
+    }
+  }
+}
+
+#appeal {
+  .section-wrap {
+    padding: 100px 0;
+
+    h5 {
+      font-size: 20px;
+      letter-spacing: 0.6px;
+      line-height: 1.5;
+      text-align: center;
+      margin-bottom: 60px;
+
+      span {
+        display: block;
+      }
+    }
+
+    .appeal-wrap {
+      max-width: 980px;
+      width: 90%;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0 35px;
+      margin: auto;
+
+      .appeal-item {
+        max-width: 303px;
+        width: 100%;
+        border-radius: 23px;
+        box-shadow: 0px 3px 6px #00000029;
+        padding: 30px 20px;
+
+        img {
+          width: 200px;
+          height: auto;
+          aspect-ratio: 1 / 1;
+          object-fit: cover;
+          object-position: center;
+          border-radius: 50%;
+          margin: auto auto 15px;
+        }
+
+        h5 {
+          font-size: 16px;
+          letter-spacing: 0.48px;
+          line-height: 1.5;
+          text-align: center;
+          margin-bottom: 20px;
+        }
+      }
+    }
+  }
+}
+
+#blog {
+  background-color: #EFEFEF;
+  padding: 100px 0;
+
+  h5 {
+    font-size: 20px;
+    letter-spacing: 0.6px;
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .section-wrap {
+    max-width: 980px;
+    width: 100%;
+    margin: auto;
+
+    .blog-wrap {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0 20px;
+
+      .blog-item {
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0px 3px 6px #00000029;
+        padding-bottom: 10px;
+
+        img {
+          width: 100%;
+          border-radius: 15px 15px 0 0;
+        }
+
+        .info-wrap {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-top: 15px;
+          padding-bottom: 10px;
+
+          .date {
+            font-size: 13px;
+          }
+
+          .category {
+            font-size: 9px;
+            letter-spacing: 0.27px;
+            color: white;
+            background-color: #707070;
+            border-radius: 12px;
+            padding: 5px 10px;
+          }
+        }
+
+        p {
+          font-size: 12px;
+          letter-spacing: 0.36px;
+          line-height: 1.6;
+
+          min-height: 62px;
+        }
+
+        .info-wrap, p {
+          max-width: 200px;
+          width: 100%;
+          margin: auto;
+        }
+      }
+    }
+
+    .btn {
+      font-size: 14px;
+      color: white;
+      letter-spacing: 0.42px;
+      background-color: #313131;
+      padding: 10px 25px;
+      margin-top: 50px;
+      margin-left: auto;
+    }
+  }
+}
+
+.faq-question {
+  cursor: pointer;
+  padding: 10px 0;
+  &.active {
+    font-weight: bold;
+  }
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
+
+  &.open {
+    max-height: 500px; // 適当でOK
+    opacity: 1;
+  }
+}
+
+</style>

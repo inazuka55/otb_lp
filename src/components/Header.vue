@@ -1,5 +1,5 @@
 <template>
-  <header class="header" :class="{ 'is-open': isActive, 'is-sticky': overHeroContent, 'is-fixed': route.path !== '/' }">
+  <header class="header" :class="{ 'is-open': isActive, 'is-sticky': overHeroContent, 'is-fixed': route.path !== '/' }" style="display: none;">
     <div class="nav-wrap">
       <NuxtLink class="logo flexbox align-center" to="/" rel="bookmark">
         <img src="/images/img-logo.jpg" alt="東京予防医療クリニック" />
@@ -57,31 +57,6 @@
 
 <script setup lang="ts">
 const route = ref(useRoute());
-let windowHeight = ref(0);
-const overHeroContent = ref(false);
-
-const getWindowHeight = () => {
-  const heroElement = document.getElementsByClassName('main-hero_contents');
-  windowHeight.value = heroElement[0].clientHeight;
-};
-
-const handleScroll = () => {
-  if (window.scrollY > windowHeight.value) {
-    overHeroContent.value = true;
-  } else {
-    overHeroContent.value = false;
-  }
-};
-
-onMounted(() => {
-  window.addEventListener('resize', getWindowHeight);
-  getWindowHeight();
-  window.addEventListener('scroll', handleScroll);
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', handleScroll);
-});
 
 let isActive = ref(false);
 
