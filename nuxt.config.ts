@@ -7,7 +7,7 @@ export default defineNuxtConfig({
   css: ['~/assets/css/style.scss'],
 
   app: {
-    baseURL: '/outofthebox/'
+    baseURL: '/outofthebox/',
   },
 
   experimental: {
