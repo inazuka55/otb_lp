@@ -91,21 +91,21 @@
           v-for="(item, index) in faqList"
           :key="index"
         >
-          <!-- 質問をクリックで開閉 -->
-          <p 
-            class="faq-question js-toggle"
-            :class="{ active: openIndex === index }"
-            @click="toggle(index)"
-          >
-            Q. {{ item.question }}
-          </p>
-
-          <!-- 回答 -->
+          <div class="question">
+            <p 
+              class="faq-question js-toggle"
+              :class="{ active: openIndex === index }"
+              @click="toggle(index)"
+            >
+              <span>Q</span>{{ item.question }}
+            </p>
+            <span class="faq-toggle-icon"></span>
+          </div>
           <p 
             class="faq-answer"
             :class="{ open: openIndex === index }"
           >
-            A. {{ item.answer }}
+            <span>A</span>{{ item.answer }}
           </p>
         </div>
       </div>
@@ -116,6 +116,65 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+onMounted(() => {
+  gsap.registerPlugin(ScrollTrigger);
+
+  const panels = gsap.utils.toArray<HTMLElement>('#point .section-wrap');
+  const total = panels.length || 1;
+
+  // pin の長さは画面高さ * パネル数（1画面 = 1パネル）
+  ScrollTrigger.create({
+    trigger: '#point',
+    start: 'top top',
+    end: () => `+=${window.innerHeight * total}`,
+    pin: true,
+    pinSpacing: true,
+    scrub: true,
+    // markers: true, // デバッグ用（必要なら有効化）
+  });
+
+  // 各パネルのアニメーション（パネルを等分して扱う）
+  panels.forEach((panel, i) => {
+    const startPercent = (i / total) * 100;
+    const endPercent = ((i + 1) / total) * 100;
+
+    // 1つ目はズーム、それ以外は下から上へスライド（めくり）
+    if (i === 0) {
+      gsap.fromTo(panel, { scale: 1 }, {
+        scale: 1.15,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#point',
+          start: `${startPercent}% top`,
+          end: `${endPercent}% top`,
+          scrub: true,
+        },
+      });
+    } else {
+      // 初期は下に隠しておく（CSSでも設定しておく）
+      gsap.fromTo(panel, { yPercent: 100 }, {
+        yPercent: 0,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#point',
+          start: `${startPercent}% top`,
+          end: `${endPercent}% top`,
+          scrub: true,
+        },
+      });
+    }
+  });
+
+  // リサイズ対応（end を再計算）
+  window.addEventListener('resize', () => {
+    ScrollTrigger.refresh();
+  });
+});
+
 const appealItems = [
   {
     img: "/outofthebox/images/img-appeal_1.jpg",
@@ -369,6 +428,38 @@ const toggle = (index: number) => {
   }
 }
 
+#point {
+  position: relative;
+  /* pin 時に高さが必要なので最小で全パネル分を確保しておくと安全（ScrollTrigger側で end を制御しているので必須ではない）*/
+  min-height: 100vh;
+
+  .section-wrap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;          /* 各パネルはビューポート全体 */
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* 元の配置に合わせて */
+    padding: 60px;
+    z-index: 1;
+  }
+
+  /* 2,3 は初期で下に隠す（JS と両方でも OK） */
+  .section-wrap:nth-child(2),
+  .section-wrap:nth-child(3) {
+    transform: translateY(100%);
+  }
+
+  .section-wrap:nth-child(1) { z-index: 3; }
+  .section-wrap:nth-child(2) { z-index: 2; }
+  .section-wrap:nth-child(3) { z-index: 1; }
+}
+
 #appeal {
   .section-wrap {
     padding: 100px 0;
@@ -506,23 +597,126 @@ const toggle = (index: number) => {
   }
 }
 
-.faq-question {
-  cursor: pointer;
-  padding: 10px 0;
-  &.active {
-    font-weight: bold;
-  }
-}
+#faq {
+  .section-wrap {
+    max-width: 980px;
+    width: 100%;
+    padding: 100px 0;
+    margin: auto;
 
-.faq-answer {
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition: all 0.3s ease;
+    h5 {
+      font-size: 20px;
+      text-align: center;
+    }
 
-  &.open {
-    max-height: 500px; // 適当でOK
-    opacity: 1;
+    .faq-wrap {
+      margin-top: 60px;
+
+      .faq-item {
+        margin-bottom: 20px;
+
+        &:last-of-type {
+          margin-bottom: 0;
+        }
+
+        .question{
+          cursor: pointer;
+          box-shadow: 0px 3px 6px #00000029;
+          display: flex;
+          padding: 15px 20px;
+
+          .faq-question {
+            font-size: 16px;
+
+            span {
+              font-size: 20px;
+              font-weight: bold;
+              margin-right: 15px;
+            }
+          }
+
+          .faq-toggle-icon {
+            width: 20px;
+            height: 20px;
+            position: relative;
+            flex-shrink: 0;
+            align-items: center;
+            margin-left: auto;
+
+            @include mixin.max-screen(mixin.$large) {
+                width: 0.875em;
+                height: 0.875em;
+            }
+        
+            &::before,
+            &::after {
+              content: '';
+              position: absolute;
+              background: black;
+              transition: transform 0.3s ease;
+            }
+        
+            &::before {
+              top: 50%;
+              left: 0;
+              right: 0;
+              height: 1px;
+              transform: translateY(-50%);
+            }
+        
+            &::after {
+              left: 50%;
+              top: 0;
+              bottom: 0;
+              width: 1px;
+              transform: translateX(-50%);
+            }
+          }
+      
+          &.active {
+            border-bottom: none;
+
+            .faq-toggle-icon {
+              &::before {
+                margin: auto;
+              }
+              &::after {
+                background-color: unset;
+              }
+            }
+          }
+        }
+
+        .faq-answer {
+          display: none;
+          overflow: hidden;
+
+          &.open {
+            display: flex;
+            background-color: #F8F8F8;
+            padding: 30px 10px;
+
+            border-bottom: 1px solid #DEDEDE;
+
+            animation: fadeIn 0.5s ease;
+            @keyframes fadeIn {
+                0% {
+                    opacity: 0;
+                    transform: translateY(-10px); 
+                }
+                100% {
+                    opacity: 1;
+                    transform: none;
+                }
+            }
+
+            color: white;
+            background-color: #1D1D1D;
+            padding: 15px 20px;
+          }
+        }
+      }
+    }
   }
 }
 
