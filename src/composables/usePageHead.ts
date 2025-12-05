@@ -56,10 +56,10 @@ export const usePageHead = async (head: Head) => {
         src: 'https://use.typekit.net/xxv3ubw.js',
         async: true,
         tagPriority: 'high',
+        crossorigin: 'anonymous',
+        defer: true,
         onload: `
-          try {
-            Typekit.load();
-          } catch (e) {}
+          try { Typekit.load(); } catch (e) {}
         `,
       },
     ],
