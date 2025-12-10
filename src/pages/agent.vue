@@ -80,7 +80,7 @@
         >
           <span class="mask"></span>
           <img :src="item.img" :alt="item.title" />
-          <h5>{{ item.title }}</h5>
+          <p class="ttl">{{ item.title }}</p>
           <p>{{ item.text }}</p>
         </div>
       </div>
@@ -113,27 +113,25 @@
       <h5>FAQ</h5>
 
       <div class="faq-wrap">
-        <div 
+        <details 
           class="faq-item"
           v-for="(item, index) in faqList"
           :key="index"
+          @click="handleDetailClick"
         >
-          <div class="question" @click="toggle(index)">
-            <p 
-              class="faq-question js-toggle"
-              :class="{ active: openIndex === index }"
-            >
+          <summary class="question">
+            <p class="faq-question">
               <span>Q</span>{{ item.question }}
             </p>
-            <span class="faq-toggle-icon" :class="{ active: openIndex === index }"></span>
+            <span class="faq-toggle-icon"></span>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-answer-content">
+              <span>A</span>
+              <p>{{ item.answer }}</p>
+            </div>
           </div>
-          <p 
-            class="faq-answer"
-            :class="{ open: openIndex === index }"
-          >
-            <span>A</span>{{ item.answer }}
-          </p>
-        </div>
+        </details>
       </div>
     </div>
   </section>
@@ -146,19 +144,64 @@ const slides = ref<HTMLElement | null>(null);
 const currentSlide = ref(0);
 const bottomHeaderHeight = ref(0);
 
+// ==========================================
+// アコーディオン
+// ==========================================
 const toggle = (index: number) => {
   openIndex.value = openIndex.value === index ? null : index;
 };
 
+const handleDetailClick = (event: MouseEvent) => {
+  event.preventDefault();
+  
+  const details = event.currentTarget as HTMLDetailsElement;
+  const content = details.querySelector('.faq-answer') as HTMLElement;
+  
+  if (details.open) {
+    const closingAnim = content.animate(
+      [
+        { height: content.offsetHeight + 'px', opacity: '1' },
+        { height: '0px', opacity: '0' }
+      ],
+      { duration: 150, easing: 'ease-out' }
+    );
+    closingAnim.onfinish = () => details.removeAttribute('open');
+  } else {
+    const allDetails = document.querySelectorAll('.faq-item[open]');
+    allDetails.forEach((openDetail) => {
+      if (openDetail !== details) {
+        const openContent = openDetail.querySelector('.faq-answer') as HTMLElement;
+        const closingAnim = openContent.animate(
+          [
+            { height: openContent.offsetHeight + 'px', opacity: '1' },
+            { height: '0px', opacity: '0' }
+          ],
+          { duration: 150, easing: 'ease-out' }
+        );
+        closingAnim.onfinish = () => openDetail.removeAttribute('open');
+      }
+    });
+    
+    details.setAttribute('open', 'true');
+    content.animate(
+      [
+        { height: '0px', opacity: '0' },
+        { height: content.offsetHeight + 'px', opacity: '1' }
+      ],
+      { duration: 150, easing: 'ease-out' }
+    );
+  }
+};
+
+// ==========================================
+// bottom-header 高さ反映
+// ==========================================
 const updateBottomHeaderHeight = () => {
   const bottomHeader = document.querySelector('.bottom-header') as HTMLElement;
   if (bottomHeader) {
     bottomHeaderHeight.value = bottomHeader.offsetHeight;
-
-    // body全体に padding-bottom を適用
     document.body.style.paddingBottom = `${bottomHeaderHeight.value}px`;
 
-    // CSS変数として #point に設定
     const point = document.getElementById('point');
     if (point) {
       point.style.setProperty('--bottom-header-height', `${bottomHeaderHeight.value}px`);
@@ -166,43 +209,43 @@ const updateBottomHeaderHeight = () => {
   }
 };
 
+// ==========================================
+// point scroll animation
+// ==========================================
 const handleScroll = () => {
   if (!pointSection.value || !slides.value) return;
 
   const pointRect = pointSection.value.getBoundingClientRect();
   const windowHeight = window.innerHeight;
 
-  // slidesの上端が画面上端に到達するまで（1枚目のスケールアニメーション）
+  // 1枚目のフェード＆スケール
   if (pointRect.top > 0) {
     const progress = Math.max(0, 1 - (pointRect.top / windowHeight));
     const scale = 0.5 + (progress * 0.5);
     const opacity = progress;
-    
+
     const slide1 = slides.value.querySelector('.slide1') as HTMLElement;
     if (slide1) {
       slide1.style.setProperty('--scale', scale.toString());
       slide1.style.setProperty('--opacity', opacity.toString());
     }
     currentSlide.value = 0;
-  } 
+  }
   else if (pointRect.top <= 0 && pointRect.bottom > windowHeight) {
     const slide1 = slides.value.querySelector('.slide1') as HTMLElement;
     if (slide1) {
       slide1.style.setProperty('--scale', '1');
       slide1.style.setProperty('--opacity', '1');
     }
-    
+
     const rawProgress = Math.abs(pointRect.top) / (pointRect.height - windowHeight);
     const fixedProgress = Math.min(rawProgress * 0.2, 1);
-    
-    if (fixedProgress < 0.07) { 
-      currentSlide.value = 0;
-    } else if (fixedProgress < 0.13) {
-      currentSlide.value = 1;
-    } else {
-      currentSlide.value = 2;
-    }
-  } else {
+
+    if (fixedProgress < 0.07) currentSlide.value = 0;
+    else if (fixedProgress < 0.13) currentSlide.value = 1;
+    else currentSlide.value = 2;
+  }
+  else {
     const slide1 = slides.value.querySelector('.slide1') as HTMLElement;
     if (slide1) {
       slide1.style.setProperty('--scale', '1');
@@ -210,54 +253,58 @@ const handleScroll = () => {
     }
     currentSlide.value = 2;
   }
-  
-  checkAppealVisibility();
 };
 
-const checkAppealVisibility = () => {
-  const h5 = document.querySelector('#appeal h5') as HTMLElement;
-  if (h5) {
-    const rect = h5.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
-    if (rect.bottom > 0 && rect.top < windowHeight) {
-      h5.classList.add('is-visible');
-    } else {
-      h5.classList.remove('is-visible');
-    }
-  }
-
-  const items = document.querySelectorAll('#appeal .appeal-item');
-  const windowHeight = window.innerHeight;
-
-  items.forEach((item) => {
-    const rect = item.getBoundingClientRect();
-
-    if (rect.bottom > 0 && rect.top < windowHeight) {
-      item.classList.add('is-visible');
-    } else {
-      item.classList.remove('is-visible');
-    }
-  });
-};
+// ==========================================
+// IntersectionObserver（ここが今回の主役）
+// ==========================================
+let io: IntersectionObserver | null = null;
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll, { passive: true });
   handleScroll();
-  
-  // bottom-headerの高さを取得してbodyに適用
+
   updateBottomHeaderHeight();
-  
-  // ウィンドウリサイズ時も更新
   window.addEventListener('resize', updateBottomHeaderHeight);
+
+  // ----- ここで .show を付ける -----
+  const selector = "#appeal .appeal-wrap .appeal-item, #appeal .section-wrap > h5";
+  const targets = document.querySelectorAll<HTMLElement>(selector);
+
+  io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+        } else {
+          entry.target.classList.remove("show");
+        }
+      });
+    },
+    {
+      threshold: 0.15,
+      root: null,
+      rootMargin: "0px 0px -35% 0px"
+    }
+  );
+
+  targets.forEach(el => io!.observe(el));
 });
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
   window.removeEventListener('resize', updateBottomHeaderHeight);
-  // クリーンアップ
   document.body.style.paddingBottom = '';
+
+  if (io) {
+    io.disconnect();
+    io = null;
+  }
 });
 
+// ==========================================
+// データ配列
+// ==========================================
 const appealItems = [
   {
     img: "/outofthebox/images/img-appeal_1.jpg",
@@ -321,7 +368,6 @@ const faqList = [
     answer: "通常1〜2営業日以内にご返信しております。混雑時はお時間をいただく場合があります。",
   },
 ];
-
 </script>
 
 <style lang="scss" scoped>
@@ -545,26 +591,23 @@ const faqList = [
       line-height: 1.5;
       text-align: center;
       margin-bottom: 60px;
+
       position: relative;
+        opacity: 0;
+        transform: scale(0.95);
+        transition: 
+          opacity 0.6s ease,
+          transform 0.6s ease;
+      will-change: opacity, transform;
+
+      &.show {
+        opacity: 1;
+        transform: scale(1);
+      }
+
 
       span {
         display: block;
-      }
-
-      .mask {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: #fff;
-        transform: translateX(0); /* 初期状態は隠す */
-        transition: transform 1.8s ease-out;
-        pointer-events: none;
-      }
-
-      &.is-visible .mask {
-        transform: translateX(100%); /* is-visible が付いたら mask が右にスライド */
       }
     }
 
@@ -583,8 +626,17 @@ const faqList = [
         box-shadow: 0px 3px 6px #00000029;
         padding: 30px 20px;
 
-        position: relative;
-        overflow: hidden;
+        opacity: 0;
+        transform: scale(0.95);
+        transition: 
+          opacity 0.6s ease,
+          transform 0.6s ease;
+        will-change: opacity, transform;
+
+        &.show {
+          opacity: 1;
+          transform: scale(1);
+        }
 
         img {
           width: 200px;
@@ -596,29 +648,12 @@ const faqList = [
           margin: auto auto 15px;
         }
 
-        h5 {
+        .ttl {
           font-size: 16px;
           letter-spacing: 0.48px;
           line-height: 1.5;
           text-align: center;
           margin-bottom: 20px;
-        }
-
-        .mask {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: #fff;
-          transform: translateX(0);
-          transition: transform 1s ease-out;
-          pointer-events: none;
-          z-index: 10;
-        }
-
-        &.is-visible .mask {
-          transform: translateX(100%); /* 画面内に入ったらスライドして表示 */
         }
       }
     }
@@ -731,16 +766,28 @@ const faqList = [
           margin-bottom: 0;
         }
 
-        .question {
+        summary {
+          list-style: none;
           cursor: pointer;
+
+          &::-webkit-details-marker {
+            display: none;
+          }
+        }
+
+        .question {
           box-shadow: 0px 3px 6px #00000029;
           display: flex;
+          align-items: center;
           padding: 15px 20px;
+          background-color: white;
 
           .faq-question {
             font-size: 16px;
+            margin: 0;
 
             span {
+              width: 16px;
               font-size: 20px;
               font-weight: bold;
               margin-right: 15px;
@@ -752,8 +799,8 @@ const faqList = [
             height: 20px;
             position: relative;
             flex-shrink: 0;
-            align-items: center;
             margin-left: auto;
+            transition: transform 0.3s ease;
 
             &::before,
             &::after {
@@ -778,45 +825,45 @@ const faqList = [
               width: 1px;
               transform: translateX(-50%);
             }
+          }
+        }
 
-            &.active {
-              &::after {
-                transform: translateX(-50%) rotate(90deg);
-                opacity: 0;
-              }
-            }
+        &[open] {
+          .faq-toggle-icon::after {
+            transform: translateX(-50%) rotate(90deg);
+            opacity: 0;
           }
         }
 
         .faq-answer {
-          display: none;
           overflow: hidden;
+          height: 0;
+        }
 
-          &.open {
-            display: flex;
-            animation: fadeIn 0.5s ease;
-            color: white;
-            background-color: #1D1D1D;
-            padding: 15px 20px;
+        &[open] .faq-answer {
+          height: auto;
+        }
 
-            span {
-              font-size: 20px;
-              font-weight: bold;
-              line-height: 1;
-              margin-top: 0.1em;
-              margin-right: 15px;
-            }
+        .faq-answer-content {
+          display: flex;
+          color: white;
+          background-color: #1D1D1D;
+          padding: 15px 20px;
 
-            @keyframes fadeIn {
-              0% {
-                opacity: 0;
-                transform: translateY(0px);
-              }
-              100% {
-                opacity: 1;
-                transform: none;
-              }
-            }
+          > span {
+            width: 16px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 1;
+            margin-top: 0.1em;
+            margin-right: 15px;
+            flex-shrink: 0;
+          }
+
+          > p {
+            flex: 1;
+            margin: 0;
           }
         }
       }
