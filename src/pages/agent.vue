@@ -25,43 +25,53 @@
 
   <section id="point" ref="pointSection">
     <div class="slides" ref="slides">
-      <div 
-        class="section-wrap slide slide1"
-        :class="{ active: currentSlide >= 0 }"
-        data-index="0"
-        style="background-image: url(/outofthebox/images/img-point_1.jpg);"
-      >
-        <div class="text-wrap">
-          <h5>本気度の高い求職者へ最短でリーチできる。</h5>
-          <p>
-            イチヅケには、自分の市場価値を正しく知りたい意欲の高い求職者が集まります。プロフィールを公開した段階で、転職意向が強い、熱量の高い求職者が多数存在します。従来のスカウト型よりレスポンス率が高く、アプローチの効率が大幅に改善できます。
-          </p>
+
+      <div class="section-wrap slide slide1" data-index="0">
+        <div class="mask">
+          <div class="inner" style="background-image: url(/outofthebox/images/img-point_1.jpg);">
+            <div class="text-wrap">
+              <h5>本気度の高い求職者へ最短でリーチ<span>できる。</span></h5>
+              <p>
+                イチヅケには、自分の市場価値を正しく知りたい意欲の高い求職者が集まります。
+                プロフィールを公開した段階で、転職意向が強い求職者が多数存在します。
+                従来のスカウト型よりレスポンス率が高く、アプローチの効率が大幅に改善できます。
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div 
-        class="section-wrap slide slide2"
-        :class="{ active: currentSlide >= 1 }"
-        data-index="1"
-        style="background-image: url(/outofthebox/images/img-point_2.jpg);"
-      >
-        <div class="text-wrap">
-          <h5>競合エージェントとの差別化が図れる。</h5>
-          <p>求職者側は “提示額(年収)＋熱量” を基準に比較します。高評価を提示できるほど求職者との接点を確保しやすく、良い提案をできる転職エージェント様が、正当に選ばれる環境が整っています。</p>
+      <div class="section-wrap slide slide2" data-index="1">
+        <div class="mask">
+          <div class="inner" style="background-image: url(/outofthebox/images/img-point_2.jpg);">
+            <div class="text-wrap">
+              <h5>競合エージェントとの差別化が図れる。</h5>
+              <p>
+                求職者側は "提示額(年収)＋熱量" を基準に比較します。
+                高評価を提示できるほど求職者との接点を確保しやすく、
+                良い提案をできる転職エージェント様が、正当に選ばれる環境が整っています。
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div 
-        class="section-wrap slide slide3"
-        :class="{ active: currentSlide >= 2 }"
-        data-index="2"
-        style="background-image: url(/outofthebox/images/img-point_3.jpg);"
-      >
-        <div class="text-wrap">
-          <h5>データに基づいた採用活動ができる。</h5>
-          <p>様々な職種・スキル・経験値の人材が、どのような反応を得ているのか。市場価値のトレンドを知るヒントになります。求人戦略・求職者への提案精度・顧客へのレポートに活用でき、データドリブンな転職支援が可能になります。</p>
+      <div class="section-wrap slide slide3" data-index="2">
+        <div class="mask">
+          <div class="inner" style="background-image: url(/outofthebox/images/img-point_3.jpg);">
+            <div class="text-wrap">
+              <h5>データに基づいた採用活動ができる。</h5>
+              <p>
+                様々な職種・スキル・経験値の人材が、どのような反応を得ているのか。
+                市場価値のトレンドを知るヒントになります。
+                求人戦略・求職者への提案精度・顧客へのレポートに活用でき、
+                データドリブンな転職支援が可能になります。
+              </p>
+            </div>
+          </div>
         </div>
       </div>
+
     </div>
   </section>
 
@@ -138,11 +148,16 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted, watch } from 'vue';
+
 const openIndex = ref<number | null>(null);
 const pointSection = ref<HTMLElement | null>(null);
 const slides = ref<HTMLElement | null>(null);
 const currentSlide = ref(0);
 const bottomHeaderHeight = ref(0);
+const windowWidth = ref(window.innerWidth);
+let io: IntersectionObserver | null = null;
+let ioAbout: IntersectionObserver | null = null;
 
 // ==========================================
 // アコーディオン
@@ -153,10 +168,9 @@ const toggle = (index: number) => {
 
 const handleDetailClick = (event: MouseEvent) => {
   event.preventDefault();
-  
   const details = event.currentTarget as HTMLDetailsElement;
   const content = details.querySelector('.faq-answer') as HTMLElement;
-  
+
   if (details.open) {
     const closingAnim = content.animate(
       [
@@ -181,7 +195,7 @@ const handleDetailClick = (event: MouseEvent) => {
         closingAnim.onfinish = () => openDetail.removeAttribute('open');
       }
     });
-    
+
     details.setAttribute('open', 'true');
     content.animate(
       [
@@ -194,112 +208,192 @@ const handleDetailClick = (event: MouseEvent) => {
 };
 
 // ==========================================
-// bottom-header 高さ反映
+// bottom-header 高さ & #point offset
 // ==========================================
 const updateBottomHeaderHeight = () => {
   const bottomHeader = document.querySelector('.bottom-header') as HTMLElement;
-  if (bottomHeader) {
-    bottomHeaderHeight.value = bottomHeader.offsetHeight;
-    document.body.style.paddingBottom = `${bottomHeaderHeight.value}px`;
+  const point = document.getElementById('point');
+  if (!point || !bottomHeader) return;
 
-    const point = document.getElementById('point');
-    if (point) {
-      point.style.setProperty('--bottom-header-height', `${bottomHeaderHeight.value}px`);
-    }
-  }
+  bottomHeaderHeight.value = bottomHeader.offsetHeight;
+  document.body.style.paddingBottom = `${bottomHeaderHeight.value}px`;
+  point.style.setProperty('--bottom-header-height', `${bottomHeaderHeight.value}px`);
+  point.style.setProperty('--point-offset', `-${bottomHeaderHeight.value}px`);
 };
 
 // ==========================================
 // point scroll animation
 // ==========================================
+let lastScrollY = 0;
 const handleScroll = () => {
   if (!pointSection.value || !slides.value) return;
 
   const pointRect = pointSection.value.getBoundingClientRect();
   const windowHeight = window.innerHeight;
+  const currentY = window.scrollY;
+  const isForward = currentY > lastScrollY;
+  lastScrollY = currentY;
 
-  // 1枚目のフェード＆スケール
+  const slide1 = slides.value.querySelector('.slide1') as HTMLElement;
+  const slide2 = slides.value.querySelector('.slide2') as HTMLElement;
+  const slide3 = slides.value.querySelector('.slide3') as HTMLElement;
+
+  const mask1 = slide1.querySelector('.mask') as HTMLElement;
+  const mask2 = slide2.querySelector('.mask') as HTMLElement;
+  const mask3 = slide3.querySelector('.mask') as HTMLElement;
+  const inner1 = slide1.querySelector('.inner') as HTMLElement;
+
+  const bh = bottomHeaderHeight.value || 0;
+
+  // 上端より上にある場合
   if (pointRect.top > 0) {
-    const progress = Math.max(0, 1 - (pointRect.top / windowHeight));
-    const scale = 0.5 + (progress * 0.5);
-    const opacity = progress;
-
-    const slide1 = slides.value.querySelector('.slide1') as HTMLElement;
-    if (slide1) {
-      slide1.style.setProperty('--scale', scale.toString());
-      slide1.style.setProperty('--opacity', opacity.toString());
-    }
-    currentSlide.value = 0;
+    inner1.style.transform = `translate(-50%, calc(-50% + ${bh}px)) scale(0.5)`;
+    mask1.style.clipPath = 'inset(0 0 0 0)';
+    mask2.style.clipPath = 'inset(100% 0 0 0)';
+    mask3.style.clipPath = 'inset(100% 0 0 0)';
+    slide1.style.display = "block";
+    slide2.style.display = "none";
+    slide3.style.display = "none";
+    slide1.style.zIndex = "10";
+    slide2.style.zIndex = "2";
+    slide3.style.zIndex = "1";
+    slide1.classList.add("is-front");
+    slide2.classList.remove("is-front");
+    slide3.classList.remove("is-front");
+    return;
   }
-  else if (pointRect.top <= 0 && pointRect.bottom > windowHeight) {
-    const slide1 = slides.value.querySelector('.slide1') as HTMLElement;
-    if (slide1) {
-      slide1.style.setProperty('--scale', '1');
-      slide1.style.setProperty('--opacity', '1');
-    }
 
-    const rawProgress = Math.abs(pointRect.top) / (pointRect.height - windowHeight);
-    const fixedProgress = Math.min(rawProgress * 0.2, 1);
+  const scrolled = Math.abs(pointRect.top);
+  const totalHeight = pointRect.height - windowHeight;
+  const progress = Math.min(scrolled / totalHeight, 1);
 
-    if (fixedProgress < 0.07) currentSlide.value = 0;
-    else if (fixedProgress < 0.13) currentSlide.value = 1;
-    else currentSlide.value = 2;
+  // スライド1（拡大）
+  if (progress < 0.25) {
+    const t = progress / 0.25;
+    inner1.style.transform = `translate(-50%, calc(-50% + ${bh}px)) scale(${0.5 + t * 0.5})`;
+    mask1.style.clipPath = 'inset(0 0 0 0)';
+    mask2.style.clipPath = 'inset(100% 0 0 0)';
+    mask3.style.clipPath = 'inset(100% 0 0 0)';
+    slide1.style.display = "block";
+    slide2.style.display = "none";
+    slide3.style.display = "none";
+    slide1.style.zIndex = "10";
+    slide2.style.zIndex = "2";
+    slide3.style.zIndex = "1";
+    slide1.classList.add("is-front");
+    slide2.classList.remove("is-front");
+    slide3.classList.remove("is-front");
+    return;
   }
-  else {
-    const slide1 = slides.value.querySelector('.slide1') as HTMLElement;
-    if (slide1) {
-      slide1.style.setProperty('--scale', '1');
-      slide1.style.setProperty('--opacity', '1');
+
+  // スライド1→2
+  if (progress < 0.55) {
+    const t = (progress - 0.25) / 0.3;
+    slide1.style.display = "block";
+    slide2.style.display = "block";
+    slide3.style.display = "none";
+    inner1.style.transform = `translate(-50%, calc(-50% + ${bh}px)) scale(1)`;
+
+    if (isForward) {
+      mask1.style.clipPath = `inset(0 0 ${t * 100}% 0)`;
+      mask2.style.clipPath = `inset(${(1 - t) * 100}% 0 0 0)`;
+      slide1.style.zIndex = "2";
+      slide2.style.zIndex = "10";
+      slide1.classList.remove("is-front");
+      slide2.classList.add("is-front");
+    } else {
+      mask1.style.clipPath = `inset(${(1 - t) * 100}% 0 0 0)`;
+      mask2.style.clipPath = `inset(0 0 ${t * 100}% 0)`;
+      slide1.style.zIndex = "2";
+      slide2.style.zIndex = "10";
+      slide1.classList.remove("is-front");
+      slide2.classList.add("is-front");
     }
-    currentSlide.value = 2;
+    slide3.classList.remove("is-front");
+    return;
+  }
+
+  // スライド2→3
+  const t = (progress - 0.55) / 0.45;
+  slide1.style.display = "none";
+  slide2.style.display = "block";
+  slide3.style.display = "block";
+
+  if (isForward) {
+    mask2.style.clipPath = `inset(0 0 ${t * 100}% 0)`;
+    mask3.style.clipPath = `inset(${(1 - t) * 100}% 0 0 0)`;
+    slide2.style.zIndex = "2";
+    slide3.style.zIndex = "10";
+    slide2.classList.remove("is-front");
+    slide3.classList.add("is-front");
+  } else {
+    mask2.style.clipPath = `inset(${(1 - t) * 100}% 0 0 0)`;
+    mask3.style.clipPath = `inset(0 0 ${t * 100}% 0)`;
+    slide2.style.zIndex = "10";
+    slide3.style.zIndex = "2";
+    slide3.classList.add("is-front");
+    slide2.classList.remove("is-front");
   }
 };
 
 // ==========================================
-// IntersectionObserver（ここが今回の主役）
+// IntersectionObserver
 // ==========================================
-let io: IntersectionObserver | null = null;
+const createObservers = () => {
+  if (ioAbout) ioAbout.disconnect();
+  const aboutTargets = document.querySelectorAll<HTMLElement>('#about .text-wrap');
+  const aboutMargin = windowWidth.value <= 480 ? "0px 0px -15% 0px" : "0px 0px -25% 0px";
 
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll, { passive: true });
-  handleScroll();
+  ioAbout = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => entry.target.classList.toggle("show", entry.isIntersecting));
+    },
+    { threshold: 0.1, rootMargin: aboutMargin }
+  );
+  aboutTargets.forEach(el => ioAbout!.observe(el));
 
-  updateBottomHeaderHeight();
-  window.addEventListener('resize', updateBottomHeaderHeight);
-
-  // ----- ここで .show を付ける -----
-  const selector = "#appeal .appeal-wrap .appeal-item, #appeal .section-wrap > h5";
+  if (io) io.disconnect();
+  const selector = `
+    #about img,
+    #appeal .appeal-wrap .appeal-item,
+    #appeal .section-wrap > h5,
+    #blog .section-wrap > h5,
+    #blog .blog-wrap .blog-item,
+    #blog .btn,
+    #faq .section-wrap > h5,
+    #faq .faq-wrap
+  `;
   const targets = document.querySelectorAll<HTMLElement>(selector);
+  const otherMargin = windowWidth.value <= 480 ? "0px 0px -20% 0px" : "0px 0px -35% 0px";
 
   io = new IntersectionObserver(
     (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("show");
-        } else {
-          entry.target.classList.remove("show");
-        }
-      });
+      entries.forEach(entry => entry.target.classList.toggle("show", entry.isIntersecting));
     },
-    {
-      threshold: 0.15,
-      root: null,
-      rootMargin: "0px 0px -35% 0px"
-    }
+    { threshold: 0.15, rootMargin: otherMargin }
   );
-
   targets.forEach(el => io!.observe(el));
+};
+
+// ==========================================
+// onMounted / onUnmounted
+// ==========================================
+onMounted(() => {
+  updateBottomHeaderHeight();
+  createObservers();
+  window.addEventListener('resize', () => {
+    windowWidth.value = window.innerWidth;
+    updateBottomHeaderHeight();
+    createObservers();
+  });
+  window.addEventListener('scroll', handleScroll, { passive: true });
 });
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
-  window.removeEventListener('resize', updateBottomHeaderHeight);
+  if (io) { io.disconnect(); io = null; }
+  if (ioAbout) { ioAbout.disconnect(); ioAbout = null; }
   document.body.style.paddingBottom = '';
-
-  if (io) {
-    io.disconnect();
-    io = null;
-  }
 });
 
 // ==========================================
@@ -328,7 +422,7 @@ const blogList = [
     img: "/outofthebox/images/img-blog_1.png",
     date: "2025.11.11",
     category: "お知らせ",
-    title: "提供サービス変更及び利用規約改定のお知らせ",
+    title: "提供サービス変更及び利用規約改定のお知らせ提供サービス変更及び利用規約改定のお知らせ提供サービス変更及び利用規約改定のお知らせ提供サービス変更及び利用規約改定のお知らせ",
   },
   {
     img: "/outofthebox/images/img-blog_2.png",
@@ -382,10 +476,19 @@ const faqList = [
   align-content: center;
   position: relative;
 
+  @include mixin.max-screen(mixin.$small) {
+    background-position: 65% 0;
+  }
+
   .copy-wrap {
     padding-left: 11.72%;
     position: absolute;
     bottom: 21.875%;
+
+    @include mixin.max-screen(mixin.$small) {
+      padding-left: 8%;
+      bottom: 15%;
+    }
 
     h1 {
       font-size: 35px;
@@ -395,6 +498,10 @@ const faqList = [
       line-height: 1.67;
       text-shadow: 0px 3px 6px #0000005C;
 
+      @include mixin.max-screen(mixin.$small) {
+        font-size: 25px;
+      }
+
       span {
         display: block;
 
@@ -402,6 +509,11 @@ const faqList = [
           font-size: 50px;
           text-indent: -30px;
           letter-spacing: 3px;
+
+          @include mixin.max-screen(mixin.$small) {
+            font-size: 38px;
+            text-indent: -22px;
+          }
         }
       }
     }
@@ -416,6 +528,12 @@ const faqList = [
       margin-top: 20px;
       display: inline-block;
       text-decoration: none;
+
+      @include mixin.max-screen(mixin.$small) {
+        font-size: 14px;
+        padding: 12px 30px 15px;
+        margin-top: 10px;
+      }
     }
 
     h2 {
@@ -427,6 +545,11 @@ const faqList = [
       text-shadow: 0px 3px 6px #0000005C;
       margin-top: 30px;
 
+      @include mixin.max-screen(mixin.$small) {
+        font-size: 24px;
+        margin-top: 5px;
+      }
+
       span {
         font-size: 80px;
         color: mixin.$main;
@@ -436,6 +559,11 @@ const faqList = [
         display: inline-block;
         text-align: end;
         margin-right: 10px;
+
+        @include mixin.max-screen(mixin.$small) {
+          font-size: 70px;
+          min-width: 55px;
+        }
       }
     }
   }
@@ -445,9 +573,15 @@ const faqList = [
     height: 55px;
     background-image: url(/images/wave.svg);
     background-position: center;
+    background-repeat: no-repeat;
     background-size: cover;
     position: absolute;
     bottom: -1px;
+
+    @include mixin.max-screen(mixin.$small) {
+      height: 60px;
+      background-position: 27% 0;
+    }
   }
 }
 
@@ -461,20 +595,46 @@ const faqList = [
     margin: auto;
     align-items: center;
 
+    @include mixin.max-screen(mixin.$small) {
+      flex-direction: column;
+      padding: 50px 0;
+      gap: 55px 0;
+    }
+
     .text-wrap {
       max-width: 440px;
       width: 100%;
+
+      opacity: 0;
+      transform: scale(0.95);
+      transition: 
+        opacity 0.6s ease,
+        transform 0.6s ease;
+      will-change: opacity, transform;
+
+      &.show {
+        opacity: 1;
+        transform: scale(1);
+      }
 
       h5 {
         font-size: 18px;
         letter-spacing: 0.54px;
         line-height: 1.7;
+
+        @include mixin.max-screen(mixin.$small) {
+          font-size: 16px;
+        }
       }
 
       .logo-type {
         font-size: 30px;
         letter-spacing: 0.9px;
         margin-right: 5px;
+
+        @include mixin.max-screen(mixin.$small) {
+          font-size: 28px;
+        }
       }
 
       p {
@@ -482,6 +642,11 @@ const faqList = [
         letter-spacing: 0.45px;
         line-height: 1.73;
         margin-top: 40px;
+
+        @include mixin.max-screen(mixin.$small) {
+          font-size: 14px;
+          margin-top: 25px;
+        }
       }
     }
 
@@ -490,93 +655,142 @@ const faqList = [
       height: 440px;
       object-fit: cover;
       flex-shrink: 0;
+
+      opacity: 0;
+      transform: scale(0.95);
+      transition: 
+        opacity 0.6s ease,
+        transform 0.6s ease;
+      will-change: opacity, transform;
+
+      &.show {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
   }
 }
 
 #point {
   position: relative;
-  height: 500vh; // 400vh → 500vh に増加（3枚目の表示時間をさらに長く）
-  
+  height: 500vh;
+
   .slides {
     position: sticky;
-    top: 0;
+    top: var(--bottom-header-height, 0px);
     width: 100vw;
-    height: calc(100vh - var(--bottom-header-height));
+    height: calc(100vh - var(--bottom-header-height, 0px));
     overflow: hidden;
   }
 
   .section-wrap {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100vw;
-    height: calc(100vh - var(--bottom-header-height));
-    background-position: center;
-    background-size: cover;
-    
-    &::before {
-      content: '';
+    inset: 0;
+    overflow: hidden;
+
+    .mask {
       position: absolute;
       inset: 0;
-      background-color: rgba(0, 0, 0, 0.15);
+      clip-path: inset(0 0 0 0);
+      background: #fff;         
+      z-index: 2;               
+      overflow: hidden;
+
+      &.mask--hide {
+        background: transparent; 
+      }
+
+      .inner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        transform: translate(-50%, -50%) scale(1);
+        transform-origin: center center;
+        background-position: center center;
+        background-size: cover;
+        z-index: 1;
+      }
     }
 
     .text-wrap {
-      max-width: 390px;
-      width: 100%;
-      color: white;
       position: absolute;
-      z-index: 1;
       top: 50%;
       right: 150px;
       transform: translateY(-50%);
+      max-width: 390px;
+      color: white;
+      z-index: 3;
+
+      @include mixin.max-screen(mixin.$small) {
+        top: unset;
+        right: 5%;
+        bottom: 10%;
+        transform: unset;
+        width: 90%;
+      }
 
       h5 {
         font-size: 18px;
+        line-height: 1.7;
+        letter-spacing: 0.54px;
         text-shadow: 0px 3px 7px #00000064;
+        margin-bottom: 25px;
+
+        span {
+          display: inline;
+
+          @include mixin.max-screen(mixin.$small) {
+            display: block;
+          }
+        }
       }
 
       p {
+        font-size: 14px;
+        letter-spacing: 0.42px;
+        line-height: 1.8;
         text-shadow: 0px 3px 7px #00000040;
-        margin-top: 25px;
       }
     }
 
-    &.slide1 {
-      z-index: 1;
-      transform: translate(-50%, -50%) scale(var(--scale, 0.5));
-      transition: transform 0.1s linear;
-    }
+    &.slide1 { z-index: 3; display: block; }
+    &.slide2 { z-index: 2; display: none; }
+    &.slide3 { z-index: 1; display: none; }
 
-    &.slide2 {
-      z-index: 2;
-      transform: translate(-50%, calc(50% + 100vh));
-      opacity: 1;
-      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); // 0.6s → 0.8s
-      
-      &.active {
-        transform: translate(-50%, -50%);
-      }
-      
-      .text-wrap {
-        right: unset;
-        left: 150px;
+    &.is-front { z-index: 10; }
+
+    &.slide2 .text-wrap {
+      right: unset;
+      left: 150px;
+
+      @include mixin.max-screen(mixin.$small) {
+        left: unset;
+        right: 5%;
       }
     }
 
-    &.slide3 {
-      z-index: 3;
-      transform: translate(-50%, calc(50% + 100vh));
-      opacity: 1;
-      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); // 0.6s → 0.8s
-      
-      &.active {
-        transform: translate(-50%, -50%);
+    &.slide1 .mask .inner {
+      @include mixin.max-screen(mixin.$small) {
+        background-position: 30% 0;
+      }
+    }
+
+    &.slide2 .mask .inner {
+      @include mixin.max-screen(mixin.$small) {
+        background-position: 83% 0;
+      }
+    }
+
+    &.slide3 .mask .inner {
+      @include mixin.max-screen(mixin.$small) {
+        background-position: 15% 0;
       }
     }
   }
 }
+
 
 #appeal {
   width: 100vw;
@@ -584,6 +798,12 @@ const faqList = [
 
   .section-wrap {
     padding: 100px 0;
+
+    @include mixin.max-screen(mixin.$small) {
+      width: 90%;
+      padding: 50px 0;
+      margin: auto;
+    }
 
     h5 {
       font-size: 20px;
@@ -600,11 +820,15 @@ const faqList = [
           transform 0.6s ease;
       will-change: opacity, transform;
 
+      @include mixin.max-screen(mixin.$small) {
+        font-size: 16px;
+        margin-bottom: 30px;
+      }
+
       &.show {
         opacity: 1;
         transform: scale(1);
       }
-
 
       span {
         display: block;
@@ -618,6 +842,11 @@ const faqList = [
       grid-template-columns: repeat(3, 1fr);
       gap: 0 35px;
       margin: auto;
+
+      @include mixin.max-screen(mixin.$small) {
+        grid-template-columns: repeat(1, 1fr);
+        gap: 20px 0;
+      }
 
       .appeal-item {
         max-width: 303px;
@@ -664,11 +893,32 @@ const faqList = [
   background-color: #EFEFEF;
   padding: 100px 0;
 
+  @include mixin.max-screen(mixin.$small) {
+    padding: 50px 5%;
+    margin: auto;
+  }
+
   h5 {
     font-size: 20px;
     letter-spacing: 0.6px;
     text-align: center;
     margin-bottom: 60px;
+
+    opacity: 0;
+    transform: scale(0.95);
+      transition: 
+        opacity 0.6s ease,
+        transform 0.6s ease;
+    will-change: opacity, transform;
+
+    @include mixin.max-screen(mixin.$small) {
+      font-size: 16px;
+    }
+
+    &.show {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 
   .section-wrap {
@@ -681,11 +931,28 @@ const faqList = [
       grid-template-columns: repeat(4, 1fr);
       gap: 0 20px;
 
+      @include mixin.max-screen(mixin.$small) {
+        grid-template-columns: repeat(1, 1fr);
+        gap: 20px 0;
+      }
+
       .blog-item {
         background-color: white;
         border-radius: 15px;
         box-shadow: 0px 3px 6px #00000029;
         padding-bottom: 10px;
+        
+        opacity: 0;
+        transform: scale(0.95);
+        transition: 
+          opacity 0.6s ease,
+          transform 0.6s ease;
+        will-change: opacity, transform;
+
+        &.show {
+          opacity: 1;
+          transform: scale(1);
+        }
 
         img {
           width: 100%;
@@ -718,12 +985,20 @@ const faqList = [
           letter-spacing: 0.36px;
           line-height: 1.6;
           min-height: 62px;
+          display: -webkit-box;
+          -webkit-line-clamp: 3; /* ← 最大行数 */
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
 
         .info-wrap, p {
           max-width: 200px;
           width: 100%;
           margin: auto;
+
+          @include mixin.max-screen(mixin.$small) {
+            max-width: 90%;
+          }
         }
       }
     }
@@ -740,6 +1015,18 @@ const faqList = [
       margin-left: auto;
       display: block;
       text-decoration: none;
+
+      opacity: 0;
+      transform: scale(0.95);
+      transition: 
+        opacity 0.6s ease,
+        transform 0.6s ease;
+      will-change: opacity, transform;
+
+      &.show {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
   }
 }
@@ -751,13 +1038,46 @@ const faqList = [
     padding: 100px 0;
     margin: auto;
 
+    @include mixin.max-screen(mixin.$small) {
+      width: 90%;
+      padding: 50px 0;
+    }
+
     h5 {
       font-size: 20px;
       text-align: center;
+
+      opacity: 0;
+      transform: scale(0.95);
+      transition: 
+        opacity 0.6s ease,
+        transform 0.6s ease;
+      will-change: opacity, transform;
+
+      &.show {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
 
     .faq-wrap {
       margin-top: 60px;
+
+      @include mixin.max-screen(mixin.$small) {
+        margin-top: 30px;
+      }
+
+      opacity: 0;
+      transform: scale(0.95);
+      transition: 
+        opacity 0.6s ease,
+        transform 0.6s ease;
+      will-change: opacity, transform;
+
+      &.show {
+        opacity: 1;
+        transform: scale(1);
+      }
 
       .faq-item {
         margin-bottom: 20px;
@@ -782,15 +1102,33 @@ const faqList = [
           padding: 15px 20px;
           background-color: white;
 
+          @include mixin.max-screen(mixin.$small) {
+            padding: 10px 15px;
+          }
+
           .faq-question {
             font-size: 16px;
-            margin: 0;
+            display: flex;
+            align-items: center;
+            margin: 0 15px 0 0;
+
+            @include mixin.max-screen(mixin.$small) {
+              font-size: 14px;
+              align-items: flex-start;
+            }
 
             span {
+              display: block;
               width: 16px;
               font-size: 20px;
               font-weight: bold;
               margin-right: 15px;
+
+              @include mixin.max-screen(mixin.$small) {
+                font-size: 18px;
+                margin-top: -5px;
+                margin-right: 10px;
+              }
             }
           }
 
@@ -801,6 +1139,11 @@ const faqList = [
             flex-shrink: 0;
             margin-left: auto;
             transition: transform 0.3s ease;
+
+            @include mixin.max-screen(mixin.$small) {
+              width: 15px;
+              height: 15px;
+            }
 
             &::before,
             &::after {
@@ -850,6 +1193,10 @@ const faqList = [
           background-color: #1D1D1D;
           padding: 15px 20px;
 
+          @include mixin.max-screen(mixin.$small) {
+            padding: 10px 15px;
+          }
+
           > span {
             width: 16px;
             text-align: center;
@@ -857,8 +1204,12 @@ const faqList = [
             font-weight: bold;
             line-height: 1;
             margin-top: 0.1em;
-            margin-right: 15px;
             flex-shrink: 0;
+
+            @include mixin.max-screen(mixin.$small) {
+              font-size: 18px;
+              margin-right: 10px;
+            }
           }
 
           > p {

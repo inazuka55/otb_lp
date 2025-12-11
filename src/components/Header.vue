@@ -18,6 +18,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 const route = ref(useRoute());
 const isActive = ref(false);
 const overHeroContent = ref(false);
+const windowWidth = ref(window.innerWidth); // 画面幅を常に保持
 
 const isClicked = (): boolean => {
   isActive.value = !isActive.value;
@@ -30,36 +31,37 @@ const removeBodyClass = (refName: string): void => {
   document.body.classList.remove('pined');
 };
 
+// 画面幅更新
+const updateWindowWidth = () => {
+  windowWidth.value = window.innerWidth;
+};
+
 const handleScroll = () => {
-  // agentページ以外では何もしない
   if (route.value.path !== '/agent') {
     overHeroContent.value = false;
     return;
   }
-  
-  // agent.vueの#heroを取得
+
   const heroSection = document.querySelector('#hero');
   if (!heroSection) {
     overHeroContent.value = false;
     return;
   }
-  
+
   const heroRect = heroSection.getBoundingClientRect();
-  
-  // heroが完全に画面外に出たら表示
-  if (heroRect.bottom <= 0) {
-    overHeroContent.value = true;
-  } else {
-    overHeroContent.value = false;
-  }
+
+  // PCと同じ判定: heroが完全に画面外に出たら表示
+  overHeroContent.value = heroRect.bottom <= 0;
 };
 
 onMounted(() => {
+  window.addEventListener('resize', updateWindowWidth); // 画面幅監視
   window.addEventListener('scroll', handleScroll, { passive: true });
   handleScroll(); // 初期状態をチェック
 });
 
 onUnmounted(() => {
+  window.removeEventListener('resize', updateWindowWidth);
   window.removeEventListener('scroll', handleScroll);
 });
 </script>
@@ -85,6 +87,13 @@ onUnmounted(() => {
     top: 20px;
     right: 50px;
     z-index: 1;
+
+    @include mixin.max-screen(mixin.$small) {
+      font-size: 14px;
+      padding: 10px 25px 13px;
+      top: 15px;
+      right: 5%;
+    }
   }
 
   .bottom-header {
@@ -126,6 +135,12 @@ onUnmounted(() => {
       top: unset;
       right: unset;
       z-index: 10;
+
+      @include mixin.max-screen(mixin.$small) {
+        width: 140px;
+        font-size: 14px;
+        padding: 10px 25px;
+      }
     }
   }
 }

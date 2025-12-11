@@ -453,10 +453,6 @@ usePageHead(head);
       align-items: center;
       justify-content: center;
 
-      @include mixin.max-screen(1060px) {
-        display: none;
-      }
-
       .hero-inner {
         max-width: 408px;
         width: 100%;

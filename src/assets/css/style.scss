@@ -81,12 +81,7 @@ a {
 
 .page-contents {
   width: 100%;
-  max-width: 1600px;
   margin: auto;
-
-  @include mixin.max-screen(mixin.$medium) {
-    margin: 0;
-  }
 }
 
 .box {
