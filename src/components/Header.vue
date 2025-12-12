@@ -1,6 +1,6 @@
 <template>
   <header class="header" :class="{ 'is-open': isActive, 'is-sticky': overHeroContent }">
-    <a href="/login" target="_blank" class="btn">企業ログイン</a>
+    <a href="/login" target="_blank" class="btn" v-if="route.path !== '/job-seeker'">企業ログイン</a>
     <div 
       v-if="route.path === '/agent'" 
       class="bottom-header" 
