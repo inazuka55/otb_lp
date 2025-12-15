@@ -349,75 +349,126 @@ const createObservers = () => {
 };
 
 // ==========================================
-// blog 自動横スクロール
+// blog scroll + dot control（no clone）
 // ==========================================
 let blogScrollTimer: number | undefined;
+let isProgrammaticScroll = false;
+let scrollEndTimer: number | null = null;
 
 const initAutoBlogScroll = () => {
-  const wrap = document.querySelector('#blog .blog-wrap') as HTMLElement | null;
+  const wrap = document.querySelector(
+    '#blog .blog-wrap'
+  ) as HTMLElement | null;
   if (!wrap) return;
 
-  const items = wrap.querySelectorAll('.blog-item') as NodeListOf<HTMLElement>;
-  if (items.length === 0) return;
+  const itemWraps = Array.from(
+    wrap.querySelectorAll('.blog-item-wrap')
+  ) as HTMLElement[];
+  if (itemWraps.length === 0) return;
 
-  // ===== ドット生成 =====
-  const dotWrap = document.querySelector('#blog .blog-dots') as HTMLElement | null;
-  if (!dotWrap) return; // ← ここ必須！
+  const dotWrap = document.querySelector(
+    '#blog .blog-dots'
+  ) as HTMLElement | null;
+  if (!dotWrap) return;
 
+  // ===== reset =====
+  wrap.scrollLeft = 0;
   dotWrap.innerHTML = '';
+  if (blogScrollTimer) clearInterval(blogScrollTimer);
+
+  // ===== dots =====
   const dots: HTMLElement[] = [];
-
   let index = 0;
+  const itemWidth = itemWraps[0].offsetWidth;
 
-  const updateActiveDot = () => {
-    dots.forEach((d, i) => {
-      d.classList.toggle('active', i === index);
-    });
+  const updateActiveDot = (i: number) => {
+    dots.forEach((d, idx) =>
+      d.classList.toggle('active', idx === i)
+    );
   };
 
-  items.forEach((_, i) => {
+  itemWraps.forEach((_, i) => {
     const d = document.createElement('div');
-    d.classList.add('blog-dot');
+    d.className = 'blog-dot';
     if (i === 0) d.classList.add('active');
     dotWrap.appendChild(d);
     dots.push(d);
 
+    // ===== dot click =====
     d.addEventListener('click', () => {
       index = i;
-      updateActiveDot();
+      isProgrammaticScroll = true;
 
-      const left = items[i].offsetLeft - wrap.offsetLeft;
-      wrap.scrollTo({ left, behavior: 'smooth' });
+      wrap.scrollTo({
+        left: itemWidth * i,
+        behavior: 'smooth'
+      });
+
+      updateActiveDot(index);
+
+      if (scrollEndTimer) clearTimeout(scrollEndTimer);
+      scrollEndTimer = window.setTimeout(() => {
+        isProgrammaticScroll = false;
+      }, 400);
     });
   });
 
-  // PC は自動スクロール停止
-  if (window.innerWidth > 480) {
-    if (blogScrollTimer) window.clearInterval(blogScrollTimer);
-    return;
-  }
+  // ===== scroll sync（指操作のみ）=====
+  const syncByScroll = () => {
+    if (isProgrammaticScroll) return;
 
-  const slide = () => {
-    index++;
-    if (index >= items.length) index = 0;
-
-    const target = items[index];
-    const left = target.offsetLeft - wrap.offsetLeft;
-
-    wrap.scrollTo({
-      left,
-      behavior: 'smooth'
-    });
-
-    updateActiveDot();
+    const i = Math.round(wrap.scrollLeft / itemWidth);
+    index = Math.min(Math.max(i, 0), itemWraps.length - 1);
+    updateActiveDot(index);
   };
 
-  if (blogScrollTimer) window.clearInterval(blogScrollTimer);
+  wrap.addEventListener('scroll', syncByScroll, { passive: true });
 
-  wrap.scrollTo({ left: 0, behavior: 'auto' });
+  // ===== PC：auto slide 無効 =====
+  if (window.innerWidth > 480) return;
+
+  // ===== auto slide =====
+  const slide = () => {
+    isProgrammaticScroll = true;
+
+    // ---- last → first ----
+    if (index === itemWraps.length - 1) {
+      wrap.classList.add('is-fade');
+
+      setTimeout(() => {
+        index = 0;
+        wrap.scrollLeft = 0;
+
+        requestAnimationFrame(() => {
+          wrap.classList.remove('is-fade');
+          updateActiveDot(index);
+          isProgrammaticScroll = false;
+        });
+      }, 200);
+
+      return;
+    }
+
+    // ---- normal ----
+    index++;
+    wrap.scrollTo({
+      left: itemWidth * index,
+      behavior: 'smooth'
+    });
+    updateActiveDot(index);
+
+    if (scrollEndTimer) clearTimeout(scrollEndTimer);
+    scrollEndTimer = window.setTimeout(() => {
+      isProgrammaticScroll = false;
+    }, 400);
+  };
+
   blogScrollTimer = window.setInterval(slide, 4000);
 };
 
+// ==========================================
+// 3行超え判定
+// ==========================================
 const applyEllipsis = () => {
   const texts = document.querySelectorAll<HTMLParagraphElement>(
     '#blog .blog-item p'
@@ -439,49 +490,54 @@ const applyEllipsis = () => {
 // ==========================================
 // onMounted / onUnmounted
 // ==========================================
+const handleResize = async () => {
+  windowWidth.value = window.innerWidth;
+
+  await nextTick();
+  await nextTick();
+
+  initAutoBlogScroll();
+
+  await nextTick();
+  applyEllipsis();
+
+  updateBottomHeaderHeight();
+  createObservers();
+};
+
 onMounted(async () => {
   await nextTick();
   await nextTick();
   await new Promise(r => setTimeout(r, 100));
 
   initAutoBlogScroll();
-
-  await nextTick();
-  applyEllipsis(); 
+  applyEllipsis();
 
   updateBottomHeaderHeight();
   createObservers();
-
-  const handleResize = async () => {
-    windowWidth.value = window.innerWidth;
-
-    await nextTick();
-    await nextTick();
-
-    initAutoBlogScroll();
-
-    await nextTick();
-    applyEllipsis();
-
-    updateBottomHeaderHeight();
-    createObservers();
-  };
 
   window.addEventListener('resize', handleResize);
   window.addEventListener('scroll', handleScroll, { passive: true });
 });
 
 onUnmounted(() => {
+  window.removeEventListener('resize', handleResize);
   window.removeEventListener('scroll', handleScroll);
-  window.removeEventListener('resize', applyEllipsis);
-});
 
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
-  if (io) { io.disconnect(); io = null; }
-  if (ioAbout) { ioAbout.disconnect(); ioAbout = null; }
+  if (io) {
+    io.disconnect();
+    io = null;
+  }
 
-  if (blogScrollTimer) clearInterval(blogScrollTimer);
+  if (ioAbout) {
+    ioAbout.disconnect();
+    ioAbout = null;
+  }
+
+  if (blogScrollTimer) {
+    clearInterval(blogScrollTimer);
+    blogScrollTimer = undefined;
+  }
 
   document.body.style.paddingBottom = '';
 });
@@ -1019,6 +1075,7 @@ const faqList = [
 
     @include mixin.max-screen(mixin.$small) {
       font-size: 16px;
+      margin-bottom: 30px;
     }
 
     &.show {
@@ -1038,24 +1095,33 @@ const faqList = [
       gap: 0 20px;
 
       @include mixin.max-screen(mixin.$small) {
+        transition: opacity 0.2s ease;
+
         display: flex;
-        flex-wrap: nowrap;
         overflow-x: auto;
-        gap: 0;                
-        padding: 0;       
+        scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
 
         scrollbar-width: none;
-        -ms-overflow-style: none;
         &::-webkit-scrollbar {
           display: none;
         }
+
+        &.is-fade {
+          opacity: 0;
+        }
       }
 
-      .blog-item-wrap { 
+      .blog-item-wrap {
         @include mixin.max-screen(mixin.$small) {
-          padding: 10px; 
-          flex: 0 0 95vw;   
+          flex: 0 0 100%;
+          scroll-snap-align: center;
+          padding: 10px;
+          box-sizing: border-box;
+        }
+
+        &.is-clone {
+          pointer-events: none;
         }
 
         .blog-item {
@@ -1083,7 +1149,8 @@ const faqList = [
 
           img {
             width: 100%;
-            height: 165px;
+            height: auto;
+            aspect-ratio: 230 / 165;
             object-fit: cover;
             background: #000;
             border-radius: 15px 15px 0 0;
@@ -1132,7 +1199,6 @@ const faqList = [
               background: #fff;
 
               @include mixin.max-screen(mixin.$small) {
-                right: 22px;
                 bottom: 10px;
               }
             }
