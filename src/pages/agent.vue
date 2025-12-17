@@ -19,7 +19,7 @@
         <h5>求職者の"市場価値"を可視化し、新たなアプローチで求職者とのマッチングを実現するキャリアプラットフォームです。</h5>
         <p>求職者がプロフィールを登録すると、企業・エージェントは年収提示ベースのオファーを提示でき、求職者はその提示額と熱意をもとに、最も関心の高いエージェントとのみコンタクトを開始します。</p>
       </div>
-      <img src="/images/mock.svg" alt="モック">
+      <img src="/images/mock.svg" alt="モック" class="mock">
     </div>
   </section>
 
@@ -314,8 +314,8 @@ const updateBottomHeaderHeight = () => {
 // ==========================================
 const createObservers = () => {
   if (ioAbout) ioAbout.disconnect();
-  const aboutTargets = document.querySelectorAll<HTMLElement>('#about .text-wrap');
-  const aboutMargin = windowWidth.value <= 480 ? "0px 0px -15% 0px" : "0px 0px -25% 0px";
+  const aboutTargets = document.querySelectorAll<HTMLElement>('#about .text-wrap, img');
+  const aboutMargin = windowWidth.value <= 480 ? "0px 0px -15% 0px" : "0px 0px -10% 0px";
 
   ioAbout = new IntersectionObserver(
     (entries) => {
@@ -327,7 +327,7 @@ const createObservers = () => {
 
   if (io) io.disconnect();
   const selector = `
-    #about img,
+    #about .mock,
     #appeal .appeal-wrap .appeal-item,
     #appeal .section-wrap > h5,
     #blog .section-wrap > h5,
@@ -628,17 +628,17 @@ const faqList = [
   @include mixin.max-screen(mixin.$small) {
     background-position: 66% 70%;
     background-size: 320%;
-  }
 
-  &::before {
-    content: '';
-    display: block;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.15);
-    position: absolute;
-    top: 0;
-    left: 0;
+    &::before {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.15);
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
   }
 
   .copy-wrap {
