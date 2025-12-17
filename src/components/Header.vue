@@ -2,6 +2,7 @@
   <header class="header" :class="{ 'is-open': isActive, 'is-sticky': overHeroContent }">
     <!-- <a href="/login" target="_blank" class="btn" v-if="route.path !== '/job-seeker'">企業ログイン</a> -->
     <div class="btn" v-if="route.path !== '/job-seeker'"><p>企業ログイン</p></div>
+    <div class="btn btn-sp" v-if="route.path !== '/job-seeker'"><p>ログイン</p></div>
     <div 
       v-if="route.path === '/agent'" 
       class="bottom-header" 
@@ -91,17 +92,27 @@ onUnmounted(() => {
     z-index: 1;
 
     @include mixin.max-screen(mixin.$small) {
-      font-size: 14px;
-      padding: 10px 25px 13px;
-      top: unset;
-      right: 5%;
-      bottom: 8%;
+      display: none;
     }
 
     p {
       font-size: 16px;
       letter-spacing: 0.48px;
+      line-height: 1;
+    }
+  }
 
+  .btn-sp {
+    display: none;
+
+    @include mixin.max-screen(mixin.$small) {
+      display: block;
+      font-size: 14px;
+      padding: 10px 25px 13px;
+      right: 5%;
+    }
+
+    p {
       @include mixin.max-screen(mixin.$small) {
         font-size: 14px;
       }
@@ -157,6 +168,7 @@ onUnmounted(() => {
       p {
         font-size: 16px;
         letter-spacing: 0.48px;
+        line-height: 1;
 
         @include mixin.max-screen(mixin.$small) {
           font-size: 14px;

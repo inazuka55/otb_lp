@@ -4,7 +4,7 @@
       <h1>
         <span>求職者が求めていた</span>
         <span>新たなアプローチ</span>
-        <span class="logo-type">「イチヅケ」</span>
+        <span class="logo-type"><img src="/images/logo_white.svg" decoding="async" loading="eager" alt="「イチヅケ」"></span>
       </h1>
       <div class="btn"><p>転職エージェント無料登録</p></div>
       <h2>掲載料金・初期費用<span>0</span>円</h2>
@@ -15,7 +15,7 @@
   <section id="about">
     <div class="section-wrap">
       <div class="text-wrap">
-        <h5><span class="logo-type">イチヅケ</span>は、</h5>
+        <h5><span class="logo-type"><img src="/images/logo.svg" decoding="async" loading="eager" alt="「イチヅケ」"></span>は、</h5>
         <h5>求職者の"市場価値"を可視化し、新たなアプローチで求職者とのマッチングを実現するキャリアプラットフォームです。</h5>
         <p>求職者がプロフィールを登録すると、企業・エージェントは年収提示ベースのオファーを提示でき、求職者はその提示額と熱意をもとに、最も関心の高いエージェントとのみコンタクトを開始します。</p>
       </div>
@@ -626,18 +626,30 @@ const faqList = [
   position: relative;
 
   @include mixin.max-screen(mixin.$small) {
-    background-position: 65% 70%;
+    background-position: 66% 70%;
     background-size: 320%;
+  }
+
+  &::before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.15);
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 
   .copy-wrap {
     padding-left: 11.72%;
     position: absolute;
     bottom: 21.875%;
+    z-index: 1;
 
     @include mixin.max-screen(mixin.$small) {
       padding-left: 8%;
-      bottom: 20%;
+      bottom: 13%;
     }
 
     h1 {
@@ -645,7 +657,7 @@ const faqList = [
       color: white;
       font-weight: 500;
       letter-spacing: 1.05px;
-      line-height: 1.67;
+      line-height: 1.7;
       text-shadow: 0px 3px 6px #0000005C;
 
       @include mixin.max-screen(mixin.$small) {
@@ -656,13 +668,18 @@ const faqList = [
         display: block;
 
         &.logo-type {
-          font-size: 50px;
-          text-indent: -30px;
-          letter-spacing: 3px;
+          img {
+            filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.4));
+            width: 280px;
+            height: 75px;
+            margin-top: 10px;
+            margin-left: 5px;
 
-          @include mixin.max-screen(mixin.$small) {
-            font-size: 38px;
-            text-indent: -22px;
+            @include mixin.max-screen(mixin.$small) {
+              width: 200px;
+              height: 40px;
+              margin-top: 15px;
+            }
           }
         }
       }
@@ -677,7 +694,7 @@ const faqList = [
 
       @include mixin.max-screen(mixin.$small) {
         padding: 12px 30px 15px;
-        margin-top: 10px;
+        margin-top: 25px;
       }
 
       p {
@@ -685,6 +702,7 @@ const faqList = [
         font-size: 18px;
         font-weight: 500;
         letter-spacing: 0.54px;
+        line-height: 1;
 
         @include mixin.max-screen(mixin.$small) {
           font-size: 14px;
@@ -703,7 +721,7 @@ const faqList = [
 
       @include mixin.max-screen(mixin.$small) {
         font-size: 24px;
-        margin-top: 5px;
+        margin-top: 0px;
       }
 
       span {
@@ -777,20 +795,27 @@ const faqList = [
         font-size: 18px;
         letter-spacing: 0.54px;
         line-height: 1.7;
+        display: flex;
+        align-items: baseline;
 
         @include mixin.max-screen(mixin.$small) {
           font-size: 16px;
-          margin-bottom: -5px;
+          margin-bottom: 0px;
         }
-      }
 
-      .logo-type {
-        font-size: 30px;
-        letter-spacing: 0.9px;
-        margin-right: 5px;
+        .logo-type {
+          margin-right: 5px;
 
-        @include mixin.max-screen(mixin.$small) {
-          font-size: 28px;
+          img {
+            width: 120px;
+            height: 30px;
+            object-fit: contain;
+
+            @include mixin.max-screen(mixin.$small) {
+              width: 100px;
+              height: 22px;
+            }
+          }
         }
       }
 
